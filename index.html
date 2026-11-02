@@ -118,7 +118,17 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5">
+        <!-- Supabase Cloud Sync Button -->
+        <button
+          id="btnCloudSyncModal"
+          type="button"
+          class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-[#5c8d73] transition-all"
+          title="Supabase Cloud Sync Status & SQL Setup"
+        >
+          <span id="cloudSyncStatusText">☁️ Cloud</span>
+        </button>
+
         <span id="overallBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#E6EFE9] text-[#3B664C] dark:bg-[#1E2E25] dark:text-[#8AB89E]">
           12th: 0% Done
         </span>
@@ -156,7 +166,7 @@
         </button>
       </div>
 
-      <!-- Collapsible 3 Exam Countdown Timers (Hidden by default so page stays ultra-clean!) -->
+      <!-- Collapsible 3 Exam Countdown Timers -->
       <div id="examTimersGrid" class="hidden grid-cols-1 sm:grid-cols-3 gap-2 fade-in">
         <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-xl p-3">
           <div class="flex items-center justify-between">
@@ -181,7 +191,7 @@
         </div>
       </div>
 
-      <!-- Clean Pill Buttons to Access Each Tool Separately (Never Messy!) -->
+      <!-- Clean Pill Buttons to Access Each Tool Separately -->
       <nav id="topPrimaryNav" class="flex flex-wrap items-center gap-1.5">
         <button
           id="navBtnSubjects"
@@ -221,7 +231,7 @@
       </nav>
     </section>
 
-    <!-- PAGE 1: CLEAN SUBJECTS HOME VIEW (Only the 6 Subjects vertically!) -->
+    <!-- PAGE 1: CLEAN SUBJECTS HOME VIEW -->
     <section id="viewSubjects" class="fade-in space-y-2.5">
       <div class="flex items-center justify-between">
         <span id="homeClassLabel" class="text-[11px] text-slate-400">
@@ -236,7 +246,7 @@
       <div id="subjectsVerticalList" class="space-y-2"></div>
     </section>
 
-    <!-- PAGE 2: CLEAN DAILY PLAN PAGE (Only Today's 3 Missions!) -->
+    <!-- PAGE 2: CLEAN DAILY PLAN PAGE -->
     <section id="viewDailyRoadmap" class="hidden fade-in space-y-3">
       <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4">
         <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
@@ -265,7 +275,7 @@
       </div>
     </section>
 
-    <!-- PAGE 3: DEDICATED CLEAN 3-DAY REVISIONS PAGE (Separated from Daily Plan!) -->
+    <!-- PAGE 3: DEDICATED CLEAN 3-DAY REVISIONS PAGE -->
     <section id="viewRevisionsHub" class="hidden fade-in space-y-3">
       <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4">
         <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
@@ -287,10 +297,7 @@
           </button>
         </div>
 
-        <!-- Clean Subject Filter Buttons for Revisions -->
         <div id="revHubSubjectButtons" class="flex flex-wrap gap-1.5 mt-3"></div>
-
-        <!-- Clean Single-Row Revision List -->
         <div id="globalRevisionStrip" class="mt-3 space-y-2"></div>
       </div>
     </section>
@@ -320,7 +327,6 @@
 
     <!-- PAGE 5: CLEAN BUTTON-SWITCHED TIMER & ALERTS PAGE -->
     <section id="viewNotifications" class="hidden fade-in space-y-3">
-      <!-- Sub-Buttons to Switch Between Focus Timer and Daily Alert Times (Never stacked together!) -->
       <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-200/70 dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800">
         <button
           id="subBtnShowTimer"
@@ -371,7 +377,7 @@
         </div>
       </div>
 
-      <!-- SUB-PANEL B: Clean Daily Alert Times (Hidden until user clicks "Daily Alert Times" button) -->
+      <!-- SUB-PANEL B: Clean Daily Alert Times -->
       <div id="panelAlertsOnly" class="hidden bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div class="flex items-center gap-2">
@@ -432,9 +438,8 @@
       <div id="chaptersVerticalList" class="space-y-2"></div>
     </section>
 
-    <!-- VIEW 3: PARTICULAR CHAPTER CHECKLIST (Clean Checklist + Action Buttons for Revision & Imp Topics!) -->
+    <!-- VIEW 3: PARTICULAR CHAPTER CHECKLIST -->
     <section id="viewTasks" class="hidden fade-in">
-      <!-- Top Compact Bar with Buttons for Revision & Imp Topics -->
       <div class="bg-white dark:bg-[#1C211F] rounded-2xl border border-slate-200/80 dark:border-slate-800/90 p-3.5 mb-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span id="chapterTaskStats" class="text-xs text-slate-500 font-medium">0 of 8 completed</span>
@@ -468,7 +473,7 @@
         <div id="chapterResearchTip" class="hidden"></div>
       </div>
 
-      <!-- Button-Toggled 3-Day Revision Drawer (Hidden until user clicks "⟳ 3-Day Revision" button!) -->
+      <!-- Button-Toggled 3-Day Revision Drawer -->
       <div id="chapterRevDrawer" class="hidden bg-white dark:bg-[#1C211F] rounded-2xl border border-[#5c8d73]/40 p-3.5 mb-3 fade-in">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div>
@@ -536,9 +541,70 @@
     </div>
   </div>
 
+  <!-- Modal: Supabase Cloud Sync & 1-Click SQL Setup -->
+  <div id="modalCloudSync" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+    <div class="bg-white dark:bg-[#1C211F] border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-5 shadow-lg">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div>
+          <h3 class="text-sm font-semibold">☁️ Supabase Cloud Backend</h3>
+          <p class="text-[11px] text-slate-400">Project: <span class="font-mono">vyfqnmdgcwepbxepcrkw</span></p>
+        </div>
+        <button id="btnCloseCloudModal" type="button" class="text-slate-400 hover:text-slate-600 text-xs">✕</button>
+      </div>
+
+      <div class="mt-3 space-y-3 text-xs">
+        <div class="flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#F6F7F5] dark:bg-[#141716] border border-slate-200/80 dark:border-slate-800">
+          <span id="modalCloudMessage" class="text-slate-600 dark:text-slate-300 font-medium">Checking connection...</span>
+          <button
+            id="btnForceCloudSync"
+            type="button"
+            class="px-3 py-1 rounded-lg text-xs font-semibold bg-[#5c8d73] text-white shrink-0"
+          >
+            Sync Now ↻
+          </button>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] font-semibold text-slate-500">One-Time SQL Setup (Run in Supabase SQL Editor):</span>
+            <button
+              id="btnCopySqlSetup"
+              type="button"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]"
+            >
+              Copy SQL
+            </button>
+          </div>
+          <textarea
+            id="sqlSetupTextarea"
+            readonly
+            rows="6"
+            class="w-full p-2.5 font-mono text-[10px] rounded-xl bg-[#F6F7F5] dark:bg-[#131615] border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 focus:outline-none"
+          >CREATE TABLE IF NOT EXISTS public.study_tracker_state (
+  id text PRIMARY KEY,
+  payload jsonb NOT NULL DEFAULT '{}'::jsonb,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE public.study_tracker_state ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public anon sync" ON public.study_tracker_state
+  FOR ALL TO anon USING (true) WITH CHECK (true);</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const STORAGE_KEY = 'neet_mission_2027_tracker_v7';
+    const STORAGE_KEY = 'neet_mission_2027_tracker_v8';
     const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+    // ================= SUPABASE BACKEND CONFIGURATION =================
+    const SUPABASE_URL = 'https://vyfqnmdgcwepbxepcrkw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5ZnFubWRnY3dlcGJ4ZXBjcmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1OTM3NDgsImV4cCI6MjEwOTE2OTc0OH0.DiNphbMyEKmCeezOzWwm8TsTpz5rBfDLjX6OV5SPeHc';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_vFy4XehlVf38lnlYYbUVxA_2Et4XCZF';
+    const SUPABASE_TABLE = 'study_tracker_state';
+    const SUPABASE_ROW_ID = 'main_profile';
+
+    let cloudSyncDebounceId = null;
 
     const PYQ_YEARS = [
       { id: 'pyq_2026', label: '2026 PYQ' },
@@ -676,7 +742,7 @@
       { id: 'pc-11-6', subjectId: 'physical_chem', title: 'Redox Reactions', classLevel: '11', priorityRank: 11, weightageTag: '1 Q/yr', repeatedTopics: 'Oxidation State Exceptions (CrO5, H2SO5), Disproportionation & n-Factor Balancing', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
       { id: 'pc-11-7', subjectId: 'physical_chem', title: 'States of Matter', classLevel: '11', priorityRank: 12, weightageTag: '1 Q/yr', repeatedTopics: 'Ideal Gas Law, Dalton Partial Pressure, Compressibility Factor (Z) & Van der Waals', qTarget: '20 DPP Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
 
-      // 3. ORGANIC CHEMISTRY (STRICT FROM-BASICS SEQUENCE)
+      // 3. ORGANIC CHEMISTRY
       { id: 'oc-11-1', subjectId: 'organic_chem', title: 'IUPAC Nomenclature', classLevel: '11', priorityRank: 1, ocOrder: 1, weightageTag: 'OC Basics #1', repeatedTopics: 'Principal Functional Group Priority (-COOH > -SO3H > -COOR > -CHO > -OH), Longest Chain & Locants', qTarget: '30 Class Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
       { id: 'oc-11-2', subjectId: 'organic_chem', title: 'Isomerism', classLevel: '11', priorityRank: 2, ocOrder: 2, weightageTag: 'OC Basics #2', repeatedTopics: 'Geometrical (Cis/Trans, E/Z), Optical Chirality, Enantiomers/Diastereomers/Meso & Keto-Enol Tautomerism', qTarget: '35 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
       { id: 'oc-11-3', subjectId: 'organic_chem', title: 'General Organic Chemistry (GOC)', classLevel: '11', priorityRank: 3, ocOrder: 3, weightageTag: 'OC Basics #3', repeatedTopics: 'Inductive (±I), Resonance (±M), Hyperconjugation, Aromaticity (Hückel), Carbocation Stability & Acid/Base Strength', qTarget: '45 MPQ + Class Qs + Last 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
@@ -738,9 +804,9 @@
     ];
 
     let state = {
-      screen: 'subjects', // 'subjects' | 'roadmap' | 'revisions' | 'imp_topics' | 'notifications' | 'chapters' | 'tasks'
-      alertsSubTab: 'timer', // 'timer' | 'alerts'
-      revHubSubjectFilter: 'active', // 'active' | subjectId
+      screen: 'subjects',
+      alertsSubTab: 'timer',
+      revHubSubjectFilter: 'active',
       examTimersOpen: false,
       chapterRevDrawerOpen: false,
       activeSubjectId: null,
@@ -772,45 +838,143 @@
     let pushHideTimeoutId = null;
     let audioCtx = null;
 
-    function loadState() {
+    function applyParsedPayload(parsed) {
+      if (!parsed || !Array.isArray(parsed.chapters) || !parsed.subjectTasks) return;
+      state.darkMode = Boolean(parsed.darkMode);
+      state.soundMuted = Boolean(parsed.soundMuted);
+      state.subjectTasks = parsed.subjectTasks;
+      state.planDayNumber = parsed.planDayNumber || 1;
+      state.lastCarriedCount = parsed.lastCarriedCount || 0;
+      state.lastCompletedCount = parsed.lastCompletedCount || 0;
+      if (Array.isArray(parsed.reminders) && parsed.reminders.length > 0) {
+        state.reminders = parsed.reminders;
+      }
+      const savedMap = {};
+      parsed.chapters.forEach(c => { savedMap[c.id] = c; });
+      state.chapters = INITIAL_CHAPTERS.map(initCh => {
+        const saved = savedMap[initCh.id];
+        if (saved) {
+          return {
+            ...initCh,
+            done: saved.done || {},
+            pyqYears: saved.pyqYears || {},
+            revCount: saved.revCount || 0,
+            nextRevAt: saved.nextRevAt || null
+          };
+        }
+        return initCh;
+      });
+      parsed.chapters.forEach(c => {
+        if (String(c.id).startsWith('ch_')) {
+          state.chapters.push(c);
+        }
+      });
+      if (Array.isArray(parsed.dailyMissions) && parsed.dailyMissions.length > 0) {
+        state.dailyMissions = parsed.dailyMissions;
+      }
+    }
+
+    function getSerializablePayload() {
+      return {
+        darkMode: state.darkMode,
+        soundMuted: state.soundMuted,
+        reminders: state.reminders,
+        planDayNumber: state.planDayNumber,
+        lastCarriedCount: state.lastCarriedCount,
+        lastCompletedCount: state.lastCompletedCount,
+        dailyMissions: state.dailyMissions,
+        subjectTasks: state.subjectTasks,
+        chapters: state.chapters
+      };
+    }
+
+    function setCloudStatusUi(badgeText, modalMessage) {
+      const bEl = document.getElementById('cloudSyncStatusText');
+      const mEl = document.getElementById('modalCloudMessage');
+      if (bEl) bEl.textContent = badgeText;
+      if (mEl && modalMessage) mEl.textContent = modalMessage;
+    }
+
+    // ================= SUPABASE REST API CLOUD SYNC =================
+    async function syncFromSupabase() {
+      setCloudStatusUi('↻ Syncing', 'Connecting to Supabase...');
       try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('neet_mission_2027_tracker_v6');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && Array.isArray(parsed.chapters) && parsed.subjectTasks) {
-            state.darkMode = Boolean(parsed.darkMode);
-            state.soundMuted = Boolean(parsed.soundMuted);
-            state.subjectTasks = parsed.subjectTasks;
-            state.planDayNumber = parsed.planDayNumber || 1;
-            state.lastCarriedCount = parsed.lastCarriedCount || 0;
-            state.lastCompletedCount = parsed.lastCompletedCount || 0;
-            if (Array.isArray(parsed.reminders) && parsed.reminders.length > 0) {
-              state.reminders = parsed.reminders;
-            }
-            const savedMap = {};
-            parsed.chapters.forEach(c => { savedMap[c.id] = c; });
-            state.chapters = INITIAL_CHAPTERS.map(initCh => {
-              const saved = savedMap[initCh.id];
-              if (saved) {
-                return {
-                  ...initCh,
-                  done: saved.done || {},
-                  pyqYears: saved.pyqYears || {},
-                  revCount: saved.revCount || 0,
-                  nextRevAt: saved.nextRevAt || null
-                };
-              }
-              return initCh;
-            });
-            parsed.chapters.forEach(c => {
-              if (String(c.id).startsWith('ch_')) {
-                state.chapters.push(c);
-              }
-            });
-            if (Array.isArray(parsed.dailyMissions) && parsed.dailyMissions.length > 0) {
-              state.dailyMissions = parsed.dailyMissions;
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.${SUPABASE_ROW_ID}&select=payload,updated_at`,
+          {
+            method: 'GET',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Accept': 'application/json'
             }
           }
+        );
+
+        if (!res.ok) {
+          if (res.status === 404 || res.status === 400 || res.status === 401) {
+            setCloudStatusUi('☁️ Setup SQL', 'Run the 1-time SQL script below in your Supabase SQL Editor to activate cloud table.');
+          } else {
+            setCloudStatusUi('☁️ Local', `Supabase status ${res.status} — using local storage.`);
+          }
+          return;
+        }
+
+        const rows = await res.json();
+        if (Array.isArray(rows) && rows.length > 0 && rows[0].payload && Array.isArray(rows[0].payload.chapters)) {
+          applyParsedPayload(rows[0].payload);
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(getSerializablePayload()));
+          } catch (e) {}
+          renderAll();
+          setCloudStatusUi('☁️ Synced', 'Connected & synced with Supabase cloud!');
+        } else {
+          // Table exists but is empty -> push initial state to Supabase!
+          await syncToSupabase();
+        }
+      } catch (err) {
+        setCloudStatusUi('☁️ Local', 'Offline or sandboxed — changes saved locally & will sync when online.');
+      }
+    }
+
+    async function syncToSupabase() {
+      setCloudStatusUi('↻ Syncing', 'Saving to Supabase cloud...');
+      try {
+        const bodyData = {
+          id: SUPABASE_ROW_ID,
+          payload: getSerializablePayload(),
+          updated_at: new Date().toISOString()
+        };
+
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?on_conflict=id`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'resolution=merge-duplicates,return=minimal'
+            },
+            body: JSON.stringify(bodyData)
+          }
+        );
+
+        if (res.ok) {
+          setCloudStatusUi('☁️ Synced', 'All progress saved to Supabase cloud!');
+        } else {
+          setCloudStatusUi('☁️ Setup SQL', 'Run the 1-time SQL script below in your Supabase SQL Editor to enable cloud saving.');
+        }
+      } catch (err) {
+        setCloudStatusUi('☁️ Local', 'Saved locally.');
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('neet_mission_2027_tracker_v7');
+        if (raw) {
+          applyParsedPayload(JSON.parse(raw));
         }
       } catch (e) {}
       if (!state.dailyMissions || state.dailyMissions.length === 0) {
@@ -820,18 +984,14 @@
 
     function saveState() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          darkMode: state.darkMode,
-          soundMuted: state.soundMuted,
-          reminders: state.reminders,
-          planDayNumber: state.planDayNumber,
-          lastCarriedCount: state.lastCarriedCount,
-          lastCompletedCount: state.lastCompletedCount,
-          dailyMissions: state.dailyMissions,
-          subjectTasks: state.subjectTasks,
-          chapters: state.chapters
-        }));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getSerializablePayload()));
       } catch (e) {}
+
+      // Debounced automatic upsert to Supabase
+      if (cloudSyncDebounceId) clearTimeout(cloudSyncDebounceId);
+      cloudSyncDebounceId = setTimeout(() => {
+        syncToSupabase();
+      }, 450);
     }
 
     function playNotificationChime() {
@@ -1322,7 +1482,6 @@
     function renderNotificationsView() {
       updateFocusTimerUi();
 
-      // Switch between Focus Timer sub-panel and Daily Alerts sub-panel via buttons
       const pTimer = document.getElementById('panelFocusTimerOnly');
       const pAlerts = document.getElementById('panelAlertsOnly');
       const bTimer = document.getElementById('subBtnShowTimer');
@@ -1458,7 +1617,6 @@
       const countBadge = document.getElementById('globalRevisionCountBadge');
       if (countBadge) countBadge.textContent = `${revChapters.length} active`;
 
-      // Subject Filter Buttons for Revisions Hub
       const pillsEl = document.getElementById('revHubSubjectButtons');
       if (pillsEl) {
         const tabs = [
@@ -2050,6 +2208,31 @@
       loadState();
       startCountdownLoop();
       renderAll();
+      // Pull latest cloud state from Supabase on startup
+      syncFromSupabase();
+
+      // Supabase Cloud Sync Modal Controls
+      const cloudModal = document.getElementById('modalCloudSync');
+      document.getElementById('btnCloudSyncModal').addEventListener('click', () => {
+        cloudModal.classList.remove('hidden');
+        cloudModal.classList.add('flex');
+      });
+      document.getElementById('btnCloseCloudModal').addEventListener('click', () => {
+        cloudModal.classList.add('hidden');
+        cloudModal.classList.remove('flex');
+      });
+      document.getElementById('btnForceCloudSync').addEventListener('click', () => {
+        syncToSupabase();
+      });
+      document.getElementById('btnCopySqlSetup').addEventListener('click', () => {
+        const ta = document.getElementById('sqlSetupTextarea');
+        if (!ta) return;
+        ta.select();
+        try {
+          document.execCommand('copy');
+          triggerAppNotification('SQL Script Copied!', 'Paste it into your Supabase SQL Editor and click Run.');
+        } catch (e) {}
+      });
 
       // Toggle Exam Countdown Timers via Button
       document.getElementById('btnToggleExamTimers').addEventListener('click', () => {
