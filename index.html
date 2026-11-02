@@ -1,0 +1,2551 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEET &amp; JEE 2027 Study Mastery Tracker</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            sage: {
+              50: '#f4f7f5',
+              100: '#e4ece7',
+              200: '#cadad0',
+              500: '#5c8d73',
+              600: '#47725b',
+              700: '#3a5c4a'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fade-in {
+      animation: fadeIn 0.15s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .push-banner-enter {
+      animation: pushSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes pushSlideDown {
+      from { opacity: 0; transform: translate(-50%, -20px) scale(0.97); }
+      to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-[#F6F7F5] text-slate-800 dark:bg-[#131615] dark:text-slate-200 min-h-screen transition-colors duration-200">
+
+  <!-- NATIVE APP-STYLE PUSH NOTIFICATION BANNER -->
+  <div
+    id="appPushNotification"
+    class="fixed top-3 left-1/2 -translate-x-1/2 z-50 hidden w-[92%] max-w-md bg-white/95 dark:bg-[#1E2422]/95 backdrop-blur-md border border-[#5c8d73]/40 rounded-2xl p-3.5 shadow-xl push-banner-enter"
+  >
+    <div class="flex items-start gap-3">
+      <div class="w-9 h-9 rounded-xl bg-[#5c8d73] text-white flex items-center justify-center text-base font-bold shrink-0 shadow-xs">
+        🔔
+      </div>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#47725b] dark:text-[#8AB89E]">
+            Mission 2027 • Study Alert
+          </span>
+          <span id="pushNotifTime" class="text-[10px] text-slate-400">now</span>
+        </div>
+        <p id="pushNotifTitle" class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mt-0.5 truncate">
+          Time for Daily Study Slot
+        </p>
+        <p id="pushNotifBody" class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-2">
+          Complete today's high-yield chapter target &amp; 3-day revision.
+        </p>
+        <div class="flex items-center gap-3 mt-2">
+          <button
+            id="btnPushOpenAction"
+            type="button"
+            class="text-[11px] font-semibold text-[#3B664C] dark:text-[#8AB89E] hover:underline"
+          >
+            Open Daily Plan ›
+          </button>
+          <button
+            id="btnPushDismiss"
+            type="button"
+            class="text-[11px] font-medium text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-xl mx-auto px-4 sm:px-6 py-6">
+
+    <!-- Minimal Header -->
+    <header class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2.5">
+        <button
+          id="btnBack"
+          type="button"
+          class="hidden items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm"
+          title="Back"
+        >
+          ←
+        </button>
+        <div>
+          <h1 id="headerTitle" class="text-base sm:text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">
+            Study Tracker
+          </h1>
+          <p id="headerBreadcrumb" class="text-[11px] text-slate-400 dark:text-slate-500">
+            6 Subjects
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="overallBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#E6EFE9] text-[#3B664C] dark:bg-[#1E2E25] dark:text-[#8AB89E]">
+          12th: 0% Done
+        </span>
+        <button
+          id="btnThemeToggle"
+          type="button"
+          class="w-8 h-8 rounded-xl bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          title="Toggle Soft Light / Dark Theme"
+        >
+          <span id="themeIcon" class="text-xs">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Ultra-Compact NEET Overall Bar + Button Launcher Strip -->
+    <section id="dashboardMeterSection" class="mb-4 space-y-2.5">
+      <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="font-medium text-slate-600 dark:text-slate-300">NEET Overall (12th + 11th)</span>
+            <span id="neetMeterPercent" class="font-bold text-[#3E6B4E] dark:text-[#8CBE9E]">0%</span>
+          </div>
+          <div class="w-full h-1.5 bg-[#EDF1EE] dark:bg-slate-800 rounded-full overflow-hidden">
+            <div id="neetMeterBar" class="h-full bg-[#5c8d73] transition-all duration-500 rounded-full" style="width: 0%"></div>
+          </div>
+          <p id="neetMeterSubtext" class="hidden text-[10px] text-slate-400 mt-1">0 of 0 completed</p>
+        </div>
+
+        <button
+          id="btnToggleExamTimers"
+          type="button"
+          class="px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-[#F6F7F5] dark:bg-[#141716] border border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-[#5c8d73] shrink-0"
+        >
+          ⏳ Exams
+        </button>
+      </div>
+
+      <!-- Collapsible 3 Exam Countdown Timers (Hidden by default so page stays ultra-clean!) -->
+      <div id="examTimersGrid" class="hidden grid-cols-1 sm:grid-cols-3 gap-2 fade-in">
+        <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-xl p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-[#3B627E] dark:text-[#8BB4D2]">JEE • Shift 1</span>
+            <span class="text-[10px] text-slate-400">20 Jan 27</span>
+          </div>
+          <div id="timerJee1" class="mt-1 font-mono text-xs font-semibold">--d : --h : --m : --s</div>
+        </div>
+        <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-xl p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-[#7C5E38] dark:text-[#CFAF85]">JEE • Shift 2</span>
+            <span class="text-[10px] text-slate-400">02 Apr 27</span>
+          </div>
+          <div id="timerJee2" class="mt-1 font-mono text-xs font-semibold">--d : --h : --m : --s</div>
+        </div>
+        <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-xl p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-[#3E6B4E] dark:text-[#8CBE9E]">NEET 2027</span>
+            <span class="text-[10px] text-slate-400">02 May 27</span>
+          </div>
+          <div id="timerNeet" class="mt-1 font-mono text-xs font-semibold">--d : --h : --m : --s</div>
+        </div>
+      </div>
+
+      <!-- Clean Pill Buttons to Access Each Tool Separately (Never Messy!) -->
+      <nav id="topPrimaryNav" class="flex flex-wrap items-center gap-1.5">
+        <button
+          id="navBtnSubjects"
+          type="button"
+          class="flex-1 py-2 px-2.5 rounded-xl text-xs font-semibold transition-all text-center"
+        >
+          Subjects
+        </button>
+        <button
+          id="navBtnRoadmap"
+          type="button"
+          class="flex-1 py-2 px-2.5 rounded-xl text-xs font-medium transition-all text-center"
+        >
+          Daily Plan
+        </button>
+        <button
+          id="navBtnRevisions"
+          type="button"
+          class="flex-1 py-2 px-2.5 rounded-xl text-xs font-medium transition-all text-center"
+        >
+          Revisions
+        </button>
+        <button
+          id="navBtnImpTopics"
+          type="button"
+          class="flex-1 py-2 px-2.5 rounded-xl text-xs font-medium transition-all text-center"
+        >
+          Imp Topics
+        </button>
+        <button
+          id="navBtnNotifications"
+          type="button"
+          class="flex-1 py-2 px-2.5 rounded-xl text-xs font-medium transition-all text-center"
+        >
+          Alerts
+        </button>
+      </nav>
+    </section>
+
+    <!-- PAGE 1: CLEAN SUBJECTS HOME VIEW (Only the 6 Subjects vertically!) -->
+    <section id="viewSubjects" class="fade-in space-y-2.5">
+      <div class="flex items-center justify-between">
+        <span id="homeClassLabel" class="text-[11px] text-slate-400">
+          Class 12th (default)
+        </span>
+        <div class="inline-flex rounded-xl p-0.5 bg-slate-200/70 dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800">
+          <button id="homeTabClass12" type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all">12th</button>
+          <button id="homeTabClass11" type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all">11th</button>
+        </div>
+      </div>
+
+      <div id="subjectsVerticalList" class="space-y-2"></div>
+    </section>
+
+    <!-- PAGE 2: CLEAN DAILY PLAN PAGE (Only Today's 3 Missions!) -->
+    <section id="viewDailyRoadmap" class="hidden fade-in space-y-3">
+      <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4">
+        <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm font-semibold">Today's Study Plan</h2>
+            <span id="planDayBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]">
+              Day 1
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btnToggleRoadmap" type="button" class="hidden text-xs">Hide / Show</button>
+            <button
+              id="btnNextDayPlan"
+              type="button"
+              class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#5c8d73] hover:bg-[#47725b] text-white transition-colors"
+            >
+              Next Day Plan ↻
+            </button>
+          </div>
+        </div>
+
+        <div id="roadmapBodyContainer" class="mt-3 space-y-2.5">
+          <div id="adaptiveAnalysisBanner" class="text-[11px] px-3 py-2 rounded-xl bg-[#F4F7F5] dark:bg-[#18211C] text-slate-600 dark:text-slate-300"></div>
+          <div id="dailyMissionsList" class="space-y-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: DEDICATED CLEAN 3-DAY REVISIONS PAGE (Separated from Daily Plan!) -->
+    <section id="viewRevisionsHub" class="hidden fade-in space-y-3">
+      <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4">
+        <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-sm font-semibold">3-Day Repeating Revisions</h2>
+              <span id="globalRevisionCountBadge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#E6EFE9] text-[#3E6B4E] dark:bg-[#1D2D23] dark:text-[#8CBE9E]">
+                0 active
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Repeats every 3 days • Tap Imp Topics on any chapter</p>
+          </div>
+          <button
+            id="btnOpenAllImpTopicsFromRev"
+            type="button"
+            class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-[#E6EFE9] text-[#3B664C] dark:bg-[#1E2E25] dark:text-[#8AB89E]"
+          >
+            See All Most Imp Topics ›
+          </button>
+        </div>
+
+        <!-- Clean Subject Filter Buttons for Revisions -->
+        <div id="revHubSubjectButtons" class="flex flex-wrap gap-1.5 mt-3"></div>
+
+        <!-- Clean Single-Row Revision List -->
+        <div id="globalRevisionStrip" class="mt-3 space-y-2"></div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: DEDICATED MOST IMPORTANT TOPICS PAGE -->
+    <section id="viewImpTopics" class="hidden fade-in space-y-3">
+      <div id="impTopicSpotlightCard" class="hidden bg-white dark:bg-[#1C211F] border-2 border-[#5c8d73]/50 rounded-2xl p-4"></div>
+
+      <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4">
+        <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <h2 class="text-sm font-semibold">Most Important Topics (10-Yr PYQ)</h2>
+          <select
+            id="impTopicsClassSelect"
+            aria-label="Filter Important Topics by Class"
+            class="px-2.5 py-1 text-xs rounded-xl bg-[#F6F7F5] dark:bg-[#141716] border border-slate-200 dark:border-slate-800"
+          >
+            <option value="all">12th &amp; 11th</option>
+            <option value="12">Class 12th</option>
+            <option value="11">Class 11th</option>
+          </select>
+        </div>
+
+        <div id="impTopicsSubjectPills" class="flex flex-wrap gap-1.5 mt-3"></div>
+        <div id="impTopicsListContainer" class="mt-3 space-y-2"></div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: CLEAN BUTTON-SWITCHED TIMER & ALERTS PAGE -->
+    <section id="viewNotifications" class="hidden fade-in space-y-3">
+      <!-- Sub-Buttons to Switch Between Focus Timer and Daily Alert Times (Never stacked together!) -->
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-200/70 dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800">
+        <button
+          id="subBtnShowTimer"
+          type="button"
+          class="py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#28302D] text-[#3B664C] dark:text-[#8AB89E] shadow-2xs transition-all"
+        >
+          ⏱ Focus Timer
+        </button>
+        <button
+          id="subBtnShowAlerts"
+          type="button"
+          class="py-2 rounded-xl text-xs font-medium text-slate-500 dark:text-slate-400 transition-all"
+        >
+          🔔 Daily Alert Times
+        </button>
+      </div>
+
+      <!-- SUB-PANEL A: Clean Focus Timer -->
+      <div id="panelFocusTimerOnly" class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-6 text-center">
+        <p id="focusTimerLabel" class="text-xs text-slate-400">Study Focus Session</p>
+        <div id="focusTimerDisplay" class="font-mono text-4xl font-bold text-[#3E6B4E] dark:text-[#8CBE9E] my-4 tracking-tight">
+          45:00
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-1.5 mb-5">
+          <button type="button" data-timer-mins="1" class="px-2.5 py-1 rounded-lg text-xs bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200 dark:border-slate-800">1m</button>
+          <button type="button" data-timer-mins="25" class="px-2.5 py-1 rounded-lg text-xs bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200 dark:border-slate-800">25m</button>
+          <button type="button" data-timer-mins="45" class="px-2.5 py-1 rounded-lg text-xs bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200 dark:border-slate-800">45m</button>
+          <button type="button" data-timer-mins="90" class="px-2.5 py-1 rounded-lg text-xs bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200 dark:border-slate-800">90m</button>
+          <button type="button" data-timer-mins="150" class="px-2.5 py-1 rounded-lg text-xs bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200 dark:border-slate-800">2.5h</button>
+        </div>
+
+        <div class="flex justify-center gap-2">
+          <button
+            id="btnStartPauseFocusTimer"
+            type="button"
+            class="px-5 py-2 rounded-xl text-xs font-semibold bg-[#5c8d73] hover:bg-[#47725b] text-white transition-colors"
+          >
+            Start Timer
+          </button>
+          <button
+            id="btnResetFocusTimer"
+            type="button"
+            class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- SUB-PANEL B: Clean Daily Alert Times (Hidden until user clicks "Daily Alert Times" button) -->
+      <div id="panelAlertsOnly" class="hidden bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold">App Push Alerts</span>
+            <span id="osNotifStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-[#E6EFE9] text-[#3E6B4E] dark:bg-[#1D2D23] dark:text-[#8CBE9E]">Active</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btnToggleSoundMute" type="button" class="px-2.5 py-1 rounded-lg text-[11px] bg-[#F6F7F5] dark:bg-[#141716] border border-slate-200 dark:border-slate-800">🔊 Sound: On</button>
+            <button id="btnEnableOsNotif" type="button" class="px-2.5 py-1 rounded-lg text-[11px] bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]">Enable System Push Alerts</button>
+            <button id="btnTestPushNotif" type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#5c8d73] text-white">Test App Notification 🔔</button>
+            <button id="btnDownloadIcsAlarms" type="button" class="hidden">⬇ Add Alarms to Phone (.ics)</button>
+          </div>
+        </div>
+
+        <div id="dailyRemindersList" class="space-y-2"></div>
+
+        <form id="formAddReminder" class="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+          <input id="inputReminderTime" type="time" required value="07:30" class="px-2.5 py-1.5 text-xs rounded-xl bg-[#F6F7F5] dark:bg-[#141716] border border-slate-200 dark:border-slate-800" />
+          <input id="inputReminderTitle" type="text" required placeholder="Add reminder..." class="flex-1 px-3 py-1.5 text-xs rounded-xl bg-[#F6F7F5] dark:bg-[#141716] border border-slate-200 dark:border-slate-800 focus:outline-none" />
+          <button type="submit" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#5c8d73] text-white">+ Add Alert</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW 2: CHAPTERS OF SELECTED SUBJECT -->
+    <section id="viewChapters" class="hidden fade-in">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div class="inline-flex flex-wrap rounded-xl p-1 bg-slate-200/70 dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800">
+          <button id="tabClass12" type="button" class="px-3 py-1 rounded-lg text-xs font-medium transition-all">Class 12th</button>
+          <button id="tabClass11" type="button" class="px-3 py-1 rounded-lg text-xs font-medium transition-all">Class 11th</button>
+          <button id="tabClassAll" type="button" class="px-3 py-1 rounded-lg text-xs font-medium transition-all">All</button>
+          <button id="tabSubjectRevision" type="button" class="px-3 py-1 rounded-lg text-xs font-medium transition-all">⟳ Revision (3-Day)</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <select id="classFilterSelect" aria-label="Filter by Class" class="hidden">
+            <option value="12">Class 12</option>
+            <option value="11">Class 11</option>
+            <option value="all">All</option>
+          </select>
+          <button id="btnOpenAddChapter" type="button" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-[#5c8d73] text-white">+ Chapter</button>
+        </div>
+      </div>
+
+      <div id="ocBasicsNotice" class="hidden mb-2.5 px-3 py-2 rounded-xl bg-[#F2E6E6]/60 dark:bg-[#281C1C] border border-[#B06C6C]/30 text-[11px] text-[#7D4949] dark:text-[#CFA0A0]">
+        <strong>OC Rule:</strong> Start from Class 11 Basics (IUPAC → Isomerism → GOC → Hydrocarbons) first.
+      </div>
+
+      <div class="mb-2.5">
+        <input
+          id="chapterSearchInput"
+          type="text"
+          placeholder="Search chapter..."
+          class="w-full px-3.5 py-2 text-xs rounded-xl bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800 focus:outline-none focus:border-[#5c8d73]"
+        />
+      </div>
+
+      <div id="chaptersVerticalList" class="space-y-2"></div>
+    </section>
+
+    <!-- VIEW 3: PARTICULAR CHAPTER CHECKLIST (Clean Checklist + Action Buttons for Revision & Imp Topics!) -->
+    <section id="viewTasks" class="hidden fade-in">
+      <!-- Top Compact Bar with Buttons for Revision & Imp Topics -->
+      <div class="bg-white dark:bg-[#1C211F] rounded-2xl border border-slate-200/80 dark:border-slate-800/90 p-3.5 mb-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span id="chapterTaskStats" class="text-xs text-slate-500 font-medium">0 of 8 completed</span>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button
+              id="btnToggleChapterRevDrawer"
+              type="button"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#E6EFE9] text-[#3E6B4E] dark:bg-[#1D2D23] dark:text-[#8CBE9E]"
+            >
+              ⟳ 3-Day Revision
+            </button>
+            <button
+              id="btnOpenChapterImpTopics"
+              type="button"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]"
+            >
+              Most Imp Topics ›
+            </button>
+            <button
+              id="btnToggleAllTasks"
+              type="button"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+            >
+              Mark all complete
+            </button>
+          </div>
+        </div>
+        <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-2.5">
+          <div id="chapterProgressBar" class="h-full bg-[#5c8d73] transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <div id="chapterResearchTip" class="hidden"></div>
+      </div>
+
+      <!-- Button-Toggled 3-Day Revision Drawer (Hidden until user clicks "⟳ 3-Day Revision" button!) -->
+      <div id="chapterRevDrawer" class="hidden bg-white dark:bg-[#1C211F] rounded-2xl border border-[#5c8d73]/40 p-3.5 mb-3 fade-in">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-[#3E6B4E] dark:text-[#8CBE9E]">3-Day Repeating Revision</span>
+              <span id="chapterRevCycleBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#E6EFE9] text-[#3E6B4E] dark:bg-[#1D2D23] dark:text-[#8CBE9E]">Cycle #0</span>
+            </div>
+            <p id="chapterRevStatusText" class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Not started yet</p>
+            <p id="chapterRevSubnote" class="hidden text-[10px] text-slate-400"></p>
+          </div>
+          <button
+            id="btnCompleteChapterRevision"
+            type="button"
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#5c8d73] hover:bg-[#47725b] text-white shrink-0"
+          >
+            ✓ Mark Revised (Next: 3 Days From Now)
+          </button>
+        </div>
+      </div>
+
+      <div id="tasksVerticalList" class="space-y-2"></div>
+
+      <form id="formAddTaskItem" class="mt-3 flex gap-2">
+        <input
+          id="inputNewTaskName"
+          type="text"
+          placeholder="Add extra item..."
+          class="flex-1 px-3.5 py-2 text-xs rounded-xl bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800 focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
+        >
+          + Add
+        </button>
+      </form>
+    </section>
+
+  </div>
+
+  <!-- Minimal Modal: Add Chapter -->
+  <div id="modalAddChapter" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+    <div class="bg-white dark:bg-[#1C211F] border border-slate-200 dark:border-slate-800 rounded-2xl max-w-sm w-full p-5 shadow-lg">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="text-sm font-semibold">Add Chapter</h3>
+        <button id="btnCloseAddChapter" type="button" class="text-slate-400 hover:text-slate-600 text-xs">✕</button>
+      </div>
+      <form id="formAddChapter" class="mt-4 space-y-3">
+        <div>
+          <label for="inputChapterName" class="block text-xs text-slate-500 mb-1">Chapter Name</label>
+          <input id="inputChapterName" type="text" required placeholder="e.g., Experimental Skills" class="w-full px-3 py-2 text-xs rounded-xl bg-[#F6F7F5] dark:bg-[#131615] border border-slate-200 dark:border-slate-800" />
+        </div>
+        <div>
+          <label for="inputChapterClass" class="block text-xs text-slate-500 mb-1">Class</label>
+          <select id="inputChapterClass" class="w-full px-3 py-2 text-xs rounded-xl bg-[#F6F7F5] dark:bg-[#131615] border border-slate-200 dark:border-slate-800">
+            <option value="12">Class 12</option>
+            <option value="11">Class 11</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button id="btnCancelAddChapter" type="button" class="px-3 py-1.5 rounded-xl text-xs text-slate-500">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-xl text-xs font-medium bg-[#5c8d73] text-white">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'neet_mission_2027_tracker_v7';
+    const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+    const PYQ_YEARS = [
+      { id: 'pyq_2026', label: '2026 PYQ' },
+      { id: 'pyq_2025', label: '2025 PYQ' },
+      { id: 'pyq_2024', label: '2024 PYQ' },
+      { id: 'pyq_2023', label: '2023 PYQ' },
+      { id: 'pyq_2022', label: '2022 PYQ' },
+      { id: 'pyq_2021', label: '2021 PYQ' },
+      { id: 'pyq_2020', label: '2020 PYQ' }
+    ];
+
+    const EXAM_TARGETS = {
+      jee1: new Date('2027-01-20T09:00:00+05:30').getTime(),
+      jee2: new Date('2027-04-02T09:00:00+05:30').getTime(),
+      neet: new Date('2027-05-02T14:00:00+05:30').getTime()
+    };
+
+    const DEFAULT_DAILY_REMINDERS = [
+      { id: 'rem_slot1', time: '10:00', title: 'Slot 1: Class 12th High-Yield + PYQs', sub: 'Pre-coaching study', enabled: true },
+      { id: 'rem_slot2', time: '13:30', title: 'Slot 2: Organic Chemistry (From Basics)', sub: 'GOC & Reactions', enabled: true },
+      { id: 'rem_class', time: '15:50', title: 'Coaching Classes (4:00 PM – 9:00 PM)', sub: '2 Classes', enabled: true },
+      { id: 'rem_slot3', time: '21:45', title: 'Slot 3: Biology + 3-Day Revision', sub: 'Night revision', enabled: true }
+    ];
+
+    const SUBJECTS = [
+      { id: 'physics', num: '1', name: 'Physics', pillBg: 'bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]', barColor: 'bg-[#5B87A8]' },
+      { id: 'physical_chem', num: '2', name: 'Physical Chemistry', pillBg: 'bg-[#F3ECE2] text-[#7C5E38] dark:bg-[#2E261C] dark:text-[#CFAF85]', barColor: 'bg-[#B38E5D]' },
+      { id: 'organic_chem', num: '3', name: 'Organic Chemistry', pillBg: 'bg-[#F2E6E6] text-[#7D4949] dark:bg-[#2E1F1F] dark:text-[#CFA0A0]', barColor: 'bg-[#B06C6C]' },
+      { id: 'inorganic_chem', num: '4', name: 'Inorganic Chemistry', pillBg: 'bg-[#EAE6F3] text-[#58497A] dark:bg-[#252030] dark:text-[#B3A4D4]', barColor: 'bg-[#7E6BA8]' },
+      { id: 'botany', num: '5', name: 'Botany', pillBg: 'bg-[#E6EFE9] text-[#3E6B4E] dark:bg-[#1D2D23] dark:text-[#8CBE9E]', barColor: 'bg-[#5C8D73]' },
+      { id: 'zoology', num: '6', name: 'Zoology', pillBg: 'bg-[#E4EFEF] text-[#396666] dark:bg-[#1B2C2C] dark:text-[#86B8B8]', barColor: 'bg-[#568C8C]' }
+    ];
+
+    const INITIAL_SUBJECT_TASKS = {
+      physics: [
+        { id: 'pyq', label: 'PYQ', isPyq: true },
+        { id: 'class_questions', label: 'CLASS QUESTIONS' },
+        { id: 'sangharsh', label: 'SANGHARSH ASSIGNMENT' },
+        { id: 'neet_replica', label: 'NEET REPLICA' },
+        { id: 'ncert_questions', label: 'NCERT QUESTIONS' },
+        { id: 'ncert_reading', label: 'NCERT READING' },
+        { id: 'boards_pyqs', label: 'BOARDS PYQS' },
+        { id: 'physics_med_easy', label: 'PHYSICS MED EASY' }
+      ],
+      physical_chem: [
+        { id: 'pyq', label: "PYQ'S", isPyq: true },
+        { id: 'neet_replica', label: 'NEET REPLICA' },
+        { id: 'lectures', label: 'LECTURES' },
+        { id: 'ncert_discussions', label: 'NCERT DISCUSSIONS' },
+        { id: 'class_questions', label: 'CLASS QUESTIONS' },
+        { id: 'practice_sheet', label: 'PRACTICE SHEET' },
+        { id: 'motikitab_series', label: 'MOTIKITAB SERIES' },
+        { id: 'dpp', label: 'DPP' }
+      ],
+      organic_chem: [
+        { id: 'pyq', label: "PYQ'S", isPyq: true },
+        { id: 'neet_replica', label: 'NEET REPLICA' },
+        { id: 'mpq', label: 'MPQ' },
+        { id: 'lectures', label: 'LECTURES' },
+        { id: 'ncert_discussions', label: 'NCERT DISCUSSIONS' },
+        { id: 'class_questions', label: 'CLASS QUESTIONS' },
+        { id: 'practice_sheet', label: 'PRACTICE SHEET' },
+        { id: 'dpp', label: 'DPP' }
+      ],
+      inorganic_chem: [
+        { id: 'most_expected', label: 'MOST EXPECTED QUESTIONS' },
+        { id: 'pyq', label: "PYQ'S", isPyq: true },
+        { id: 'neet_replica', label: 'NEET REPLICA' },
+        { id: 'lectures', label: 'LECTURES' },
+        { id: 'ncert_discussions', label: 'NCERT DISCUSSIONS' },
+        { id: 'class_questions', label: 'CLASS QUESTIONS' },
+        { id: 'magic_remedy', label: 'MAGIC REMEDY PRACTICE SHEET' }
+      ],
+      botany: [
+        { id: 'pyq', label: "PYQ'S", isPyq: true },
+        { id: 'neet_replica', label: 'NEET REPLICA' },
+        { id: 'vicks_lectures', label: 'VICKS LECTURES' },
+        { id: 'ncert_discussions', label: 'NCERT DISCUSSIONS' },
+        { id: 'in_class_questions', label: 'IN CLASS QUESTIONS' },
+        { id: 'practice_sheet', label: 'PRACTICE SHEET' }
+      ],
+      zoology: [
+        { id: 'pyq', label: "PYQ'S", isPyq: true },
+        { id: 'neet_replica', label: 'NEET REPLICA' },
+        { id: 'tapasaya_series', label: 'TAPASAYA SERIES' },
+        { id: 'lectures', label: 'LECTURES' },
+        { id: 'ncert_discussions', label: 'NCERT DISCUSSIONS' },
+        { id: 'class_questions', label: 'CLASS QUESTIONS' },
+        { id: 'practice_sheet', label: 'PRACTICE SHEET' }
+      ]
+    };
+
+    const INITIAL_CHAPTERS = [
+      // 1. PHYSICS
+      { id: 'phy-12-3', subjectId: 'physics', title: 'Current Electricity', classLevel: '12', priorityRank: 1, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Wheatstone/Meter Bridge, Kirchhoff Laws, Potentiometer, Internal Resistance & Power Rating', qTarget: '40 Class Qs + 2026 & 2025 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-2', subjectId: 'physics', title: 'Electrostatic Potential and Capacitance', classLevel: '12', priorityRank: 2, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Capacitor Networks (Series/Parallel), Dielectric Slab Insertion & Equipotential Surfaces', qTarget: '35 Sangharsh Qs + 2026–2024 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-9', subjectId: 'physics', title: 'Ray Optics and Optical Instruments', classLevel: '12', priorityRank: 3, weightageTag: '3 Qs/yr', repeatedTopics: 'Lens Maker Formula, Total Internal Reflection (TIR), Prism Deviation & Telescope/Microscope', qTarget: '40 Class Qs + NEET Replica', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-14', subjectId: 'physics', title: 'Semiconductor Electronics', classLevel: '12', priorityRank: 4, weightageTag: '3 Qs/yr', repeatedTopics: 'Logic Gates (NAND/NOR truth tables), PN Junction Forward/Reverse Bias, Zener Diode & Rectifiers', qTarget: '35 Med Easy + Last 5 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-11', subjectId: 'physics', title: 'Dual Nature of Radiation and Matter', classLevel: '12', priorityRank: 5, weightageTag: '2 Qs/yr', repeatedTopics: 'De Broglie Wavelength of Electron/Proton/Alpha, Einstein Photoelectric Equation & Stopping Potential', qTarget: '30 Class Qs + 2026–2023 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-4', subjectId: 'physics', title: 'Moving Charges and Magnetism', classLevel: '12', priorityRank: 6, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Biot-Savart Law (Circular Coil/Arc), Ampere Law, Force on Moving Charge & Moving Coil Galvanometer', qTarget: '35 Sangharsh Qs + 2026 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-1', subjectId: 'physics', title: 'Electric Charges and Fields', classLevel: '12', priorityRank: 7, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Electric Dipole Torque/Field (Axial & Equatorial) & Gauss Law Flux Applications', qTarget: '30 Class Qs + 2026–2024 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-12', subjectId: 'physics', title: 'Atoms', classLevel: '12', priorityRank: 8, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Bohr Radius/Velocity/Energy Ratios (n²/Z) & Hydrogen Spectral Series (Lyman, Balmer)', qTarget: '25 NCERT Qs + 2026–2023 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-13', subjectId: 'physics', title: 'Nuclei', classLevel: '12', priorityRank: 9, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Binding Energy per Nucleon, Nuclear Radius/Density Constancy & Mass Defect Q-Value', qTarget: '25 Class Qs + Last 5 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-7', subjectId: 'physics', title: 'Alternating Current', classLevel: '12', priorityRank: 10, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Series LCR Resonance Frequency, Q-Factor, Power Factor (cos φ) & Transformer Efficiency', qTarget: '30 Class Qs + 2026–2024 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-10', subjectId: 'physics', title: 'Wave Optics', classLevel: '12', priorityRank: 11, weightageTag: '1–2 Qs/yr', repeatedTopics: 'YDSE Fringe Width & Path Difference, Intensity Ratio (Imax/Imin) & Brewster Law', qTarget: '30 Class Qs + 2026–2024 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-6', subjectId: 'physics', title: 'Electromagnetic Induction', classLevel: '12', priorityRank: 12, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Faraday & Lenz Law, Motional EMF in Rod/Ring & Self/Mutual Inductance', qTarget: '25 Sangharsh Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-5', subjectId: 'physics', title: 'Magnetism and Matter', classLevel: '12', priorityRank: 13, weightageTag: '1 Q/yr', repeatedTopics: 'Dia-, Para-, Ferromagnetic Susceptibility (χ) & Magnetic Dipole in Uniform Field', qTarget: '20 NCERT Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-12-8', subjectId: 'physics', title: 'Electromagnetic Waves', classLevel: '12', priorityRank: 14, weightageTag: '1 Q/yr', repeatedTopics: 'Displacement Current, EM Spectrum Wavelength/Frequency Order & E = cB Relation', qTarget: '20 Med Easy Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-1', subjectId: 'physics', title: 'Units and Measurements', classLevel: '11', priorityRank: 15, weightageTag: '2 Qs/yr', repeatedTopics: 'Dimensional Analysis, Percentage Error Propagation, Vernier Callipers & Screw Gauge', qTarget: '30 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-2', subjectId: 'physics', title: 'Motion in a Straight Line', classLevel: '11', priorityRank: 16, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Stopping Distance, Motion Under Gravity (Galileo Ratio) & v-t / x-t Graphs', qTarget: '30 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-3', subjectId: 'physics', title: 'Motion in a Plane', classLevel: '11', priorityRank: 17, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Projectile Range/Max Height, Relative Velocity (Rain/River) & Uniform Circular Motion', qTarget: '30 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-4', subjectId: 'physics', title: 'Laws of Motion', classLevel: '11', priorityRank: 18, weightageTag: '3 Qs/yr', repeatedTopics: 'Impulse-Momentum, Pulley-Block Constraints, Static/Kinetic Friction & Circular Banking', qTarget: '40 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-5', subjectId: 'physics', title: 'Work, Energy and Power', classLevel: '11', priorityRank: 19, weightageTag: '2 Qs/yr', repeatedTopics: 'Work-Energy Theorem, Vertical Circular Motion, Instantaneous Power & Collisions', qTarget: '35 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-6', subjectId: 'physics', title: 'System of Particles and Rotational Motion', classLevel: '11', priorityRank: 20, weightageTag: '3 Qs/yr', repeatedTopics: 'COM Shift, Moment of Inertia Theorems, Torque = Iα, Pure Rolling & Angular Momentum Conservation', qTarget: '40 Sangharsh Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-7', subjectId: 'physics', title: 'Gravitation', classLevel: '11', priorityRank: 21, weightageTag: '2 Qs/yr', repeatedTopics: 'Variation of g with Altitude/Depth, Escape Velocity, Satellite Energy & Kepler Laws', qTarget: '30 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-8', subjectId: 'physics', title: 'Mechanical Properties of Solids', classLevel: '11', priorityRank: 22, weightageTag: '1 Q/yr', repeatedTopics: 'Hooke Law, Young/Bulk/Shear Modulus & Elastic Potential Energy per Unit Volume', qTarget: '20 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-9', subjectId: 'physics', title: 'Mechanical Properties of Fluids', classLevel: '11', priorityRank: 23, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Continuity & Bernoulli Theorem, Stokes Law Terminal Velocity & Surface Tension Drops', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-10', subjectId: 'physics', title: 'Thermal Properties of Matter', classLevel: '11', priorityRank: 24, weightageTag: '1 Q/yr', repeatedTopics: 'Thermal Expansion, Calorimetry Mixing, Heat Conduction Rods & Stefan/Wien Laws', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-11', subjectId: 'physics', title: 'Thermodynamics', classLevel: '11', priorityRank: 25, weightageTag: '3 Qs/yr', repeatedTopics: 'First Law (ΔQ = ΔU + ΔW), Isothermal/Adiabatic/Isobaric Work & P-V Cyclic Graphs', qTarget: '35 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-12', subjectId: 'physics', title: 'Kinetic Theory', classLevel: '11', priorityRank: 26, weightageTag: '1–2 Qs/yr', repeatedTopics: 'RMS/Average/Most Probable Speed, Equipartition of Energy (Cp, Cv, γ) & Mean Free Path', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-13', subjectId: 'physics', title: 'Oscillations', classLevel: '11', priorityRank: 27, weightageTag: '1–2 Qs/yr', repeatedTopics: 'SHM Displacement/Velocity/Acceleration Phase, K.E./P.E. Frequency & Spring-Block Time Period', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'phy-11-14', subjectId: 'physics', title: 'Waves', classLevel: '11', priorityRank: 28, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Progressive Wave Equation, Organ Pipes (Open vs Closed Harmonics) & Beat Frequency', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+
+      // 2. PHYSICAL CHEMISTRY
+      { id: 'pc-12-3', subjectId: 'physical_chem', title: 'Chemical Kinetics', classLevel: '12', priorityRank: 1, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Zero & First-Order Integrated Rate Law, Half-Life (t1/2), Order vs Molecularity & Arrhenius Equation', qTarget: '35 Practice Sheet Qs + 2026–24 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-12-2', subjectId: 'physical_chem', title: 'Electrochemistry', classLevel: '12', priorityRank: 2, weightageTag: '2 Qs/yr', repeatedTopics: 'Nernst Equation, Gibbs Energy (ΔG° = -nFE°), Kohlrausch Law & Faraday Electrolysis Laws', qTarget: '35 Motikitab Qs + 2026–24 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-12-1', subjectId: 'physical_chem', title: 'Solutions', classLevel: '12', priorityRank: 3, weightageTag: '2 Qs/yr', repeatedTopics: 'Colligative Properties, Van’t Hoff Factor (i), Raoult Law Deviations & Osmotic Pressure', qTarget: '35 DPP Qs + 2026–24 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-12-4', subjectId: 'physical_chem', title: 'Solid State', classLevel: '12', priorityRank: 4, weightageTag: '1 Q/yr', repeatedTopics: 'Unit Cell Density (d = ZM/a³NA), Packing Efficiency (SCC/BCC/FCC) & Schottky/Frenkel Defects', qTarget: '25 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-12-5', subjectId: 'physical_chem', title: 'Surface Chemistry', classLevel: '12', priorityRank: 5, weightageTag: '1 Q/yr', repeatedTopics: 'Hardy-Schulze Coagulation Rule, Lyophilic vs Lyophobic Sols & Freundlich Adsorption', qTarget: '20 NCERT Discussions + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-1', subjectId: 'physical_chem', title: 'Some Basic Concepts of Chemistry (Mole Concept)', classLevel: '11', priorityRank: 6, weightageTag: '2 Qs/yr', repeatedTopics: 'Limiting Reagent, Molarity/Molality/Mole Fraction & Empirical Formula', qTarget: '35 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-2', subjectId: 'physical_chem', title: 'Structure of Atom', classLevel: '11', priorityRank: 7, weightageTag: '2 Qs/yr', repeatedTopics: 'Four Quantum Numbers, Radial/Angular Nodes, (n+l) Rule & Bohr Hydrogen Spectrum', qTarget: '35 DPP Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-3', subjectId: 'physical_chem', title: 'Chemical Thermodynamics', classLevel: '11', priorityRank: 8, weightageTag: '2–3 Qs/yr', repeatedTopics: 'ΔH = ΔU + ΔngRT, Spontaneity (ΔG = ΔH - TΔS), Hess Law & Bond Enthalpy', qTarget: '35 Motikitab Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-4', subjectId: 'physical_chem', title: 'Chemical Equilibrium', classLevel: '11', priorityRank: 9, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Kp = Kc(RT)^Δng, Reaction Quotient (Q vs K) & Le Chatelier Factors', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-5', subjectId: 'physical_chem', title: 'Ionic Equilibrium', classLevel: '11', priorityRank: 10, weightageTag: '2 Qs/yr', repeatedTopics: 'Solubility Product (Ksp vs S), Common Ion Effect, Henderson Buffer pH & Salt Hydrolysis', qTarget: '35 Motikitab Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-6', subjectId: 'physical_chem', title: 'Redox Reactions', classLevel: '11', priorityRank: 11, weightageTag: '1 Q/yr', repeatedTopics: 'Oxidation State Exceptions (CrO5, H2SO5), Disproportionation & n-Factor Balancing', qTarget: '25 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'pc-11-7', subjectId: 'physical_chem', title: 'States of Matter', classLevel: '11', priorityRank: 12, weightageTag: '1 Q/yr', repeatedTopics: 'Ideal Gas Law, Dalton Partial Pressure, Compressibility Factor (Z) & Van der Waals', qTarget: '20 DPP Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+
+      // 3. ORGANIC CHEMISTRY (STRICT FROM-BASICS SEQUENCE)
+      { id: 'oc-11-1', subjectId: 'organic_chem', title: 'IUPAC Nomenclature', classLevel: '11', priorityRank: 1, ocOrder: 1, weightageTag: 'OC Basics #1', repeatedTopics: 'Principal Functional Group Priority (-COOH > -SO3H > -COOR > -CHO > -OH), Longest Chain & Locants', qTarget: '30 Class Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-11-2', subjectId: 'organic_chem', title: 'Isomerism', classLevel: '11', priorityRank: 2, ocOrder: 2, weightageTag: 'OC Basics #2', repeatedTopics: 'Geometrical (Cis/Trans, E/Z), Optical Chirality, Enantiomers/Diastereomers/Meso & Keto-Enol Tautomerism', qTarget: '35 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-11-3', subjectId: 'organic_chem', title: 'General Organic Chemistry (GOC)', classLevel: '11', priorityRank: 3, ocOrder: 3, weightageTag: 'OC Basics #3', repeatedTopics: 'Inductive (±I), Resonance (±M), Hyperconjugation, Aromaticity (Hückel), Carbocation Stability & Acid/Base Strength', qTarget: '45 MPQ + Class Qs + Last 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-11-5', subjectId: 'organic_chem', title: 'Hydrocarbons', classLevel: '11', priorityRank: 4, ocOrder: 4, weightageTag: 'OC Basics #4', repeatedTopics: 'Alkene Markovnikov vs Peroxide Anti-Markovnikov, Ozonolysis, Alkyne Acidity & Benzene Electrophilic Substitution', qTarget: '40 Practice Sheet Qs + 2026–22 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-12-1', subjectId: 'organic_chem', title: 'Haloalkanes and Haloarenes', classLevel: '12', priorityRank: 5, ocOrder: 5, weightageTag: '2 Qs/yr', repeatedTopics: 'SN1 (Racemisation/Carbocation) vs SN2 (Inversion), Saytzeff β-Elimination, Grignard Reagent & Wurtz/Fittig', qTarget: '35 Class Qs + MPQ + 2026–24 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-12-2', subjectId: 'organic_chem', title: 'Alcohols, Phenols and Ethers', classLevel: '12', priorityRank: 6, ocOrder: 6, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Acid Dehydration, Lucas Test, Reimer-Tiemann, Kolbe Reaction, Williamson Synthesis & Anisole/Ether HI Cleavage', qTarget: '40 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-12-3', subjectId: 'organic_chem', title: 'Aldehydes, Ketones and Carboxylic Acids', classLevel: '12', priorityRank: 7, ocOrder: 7, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Nucleophilic Addition, Aldol & Cross-Aldol, Cannizzaro, Tollens/Fehling/Iodoform Test, Rosenmund, Clemmensen & HVZ', qTarget: '45 MPQ + Class Qs + All 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-12-4', subjectId: 'organic_chem', title: 'Amines (Organic Compounds Containing Nitrogen)', classLevel: '12', priorityRank: 8, ocOrder: 8, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Basicity Order (Aqueous vs Gas Phase), Gabriel Phthalimide, Hoffmann Bromamide, Carbylamine, Hinsberg & Diazonium Coupling', qTarget: '35 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-12-5', subjectId: 'organic_chem', title: 'Biomolecules', classLevel: '12', priorityRank: 9, ocOrder: 9, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Glucose Reactions (HI, Br2 water, HNO3), Reducing Sugars, Protein α-Helix/Denaturation, Vitamins & DNA/RNA', qTarget: '30 NCERT Discussions + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-11-4', subjectId: 'organic_chem', title: 'Purification and Characterisation of Organic Compounds', classLevel: '11', priorityRank: 10, ocOrder: 10, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Lassaigne Sodium Fusion Test (N, S, Halogens Colours), Kjeldahl & Dumas Quantitative Estimation', qTarget: '25 NCERT Qs + Last 5 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'oc-12-6', subjectId: 'organic_chem', title: 'Polymers & Chemistry in Everyday Life', classLevel: '12', priorityRank: 11, ocOrder: 11, weightageTag: '1 Q/yr', repeatedTopics: 'Monomers of Nylon-6,6, Dacron, Bakelite, Neoprene, Buna-N/S & Analgesics/Antibiotics', qTarget: '20 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+
+      // 4. INORGANIC CHEMISTRY
+      { id: 'ic-12-2', subjectId: 'inorganic_chem', title: 'Coordination Compounds', classLevel: '12', priorityRank: 1, weightageTag: '4–5 Qs/yr', repeatedTopics: 'Crystal Field Splitting (Δo vs P), VBT Hybridization/Geometry, Spin-Only Magnetic Moment, Isomerism & Synergic Bonding', qTarget: '45 Magic Remedy Qs + Most Expected + All 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-12-1', subjectId: 'inorganic_chem', title: 'The d- and f-Block Elements', classLevel: '12', priorityRank: 2, weightageTag: '3 Qs/yr', repeatedTopics: 'KMnO4 & K2Cr2O7 Preparation/pH Reactions, Lanthanoid Contraction Consequences, Variable Oxidation States & Coloured Ions', qTarget: '35 Magic Remedy Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-12-3', subjectId: 'inorganic_chem', title: 'The p-Block Elements (Group 15 to 18)', classLevel: '12', priorityRank: 3, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Hydrides Bond Angle/Boiling/Reducing Trends, Oxoacids of P/S/Cl Basicity & Xenon Fluorides VSEPR Shapes', qTarget: '35 NCERT Discussions + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-12-4', subjectId: 'inorganic_chem', title: 'Metallurgy (Isolation of Elements)', classLevel: '12', priorityRank: 4, weightageTag: '1 Q/yr', repeatedTopics: 'Sulfide/Oxide/Carbonate Ores, Froth Floatation, Cyanide Leaching, Hall-Heroult & Mond/Van Arkel Refining', qTarget: '20 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-11-2', subjectId: 'inorganic_chem', title: 'Chemical Bonding and Molecular Structure', classLevel: '11', priorityRank: 5, weightageTag: '4 Qs/yr', repeatedTopics: 'MOT Bond Order & Paramagnetism (O2, N2, C2), VSEPR Lone-Pair Shapes, Fajan Rule, Dipole Moment & H-Bonding', qTarget: '45 Magic Remedy Qs + All 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-11-1', subjectId: 'inorganic_chem', title: 'Classification of Elements and Periodicity in Properties', classLevel: '11', priorityRank: 6, weightageTag: '2 Qs/yr', repeatedTopics: 'First & Second Ionization Enthalpy Exceptions (Be>B, N>O), Electron Gain Enthalpy (Cl>F) & Isoelectronic Radii', qTarget: '30 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-11-3', subjectId: 'inorganic_chem', title: 'The p-Block Elements (Group 13 & 14)', classLevel: '11', priorityRank: 7, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Inert Pair Effect (Tl+ > Tl3+, Pb2+ > Pb4+), Diborane (B2H6) 3c-2e Bonds, Borax & Allotropes of Carbon', qTarget: '25 Magic Remedy Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-11-5', subjectId: 'inorganic_chem', title: 'Analytical Chemistry (Salt Analysis)', classLevel: '11', priorityRank: 8, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Cation Group Reagents (Group 0 to VI), Brown Ring Test (NO3-), Dimethylglyoxime (Ni2+) & Flame Test', qTarget: '25 Most Expected Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'ic-11-4', subjectId: 'inorganic_chem', title: 'Hydrogen & The s-Block Elements', classLevel: '11', priorityRank: 9, weightageTag: '1 Q/yr', repeatedTopics: 'Thermal Stability & Solubility of Alkali/Alkaline Earth Carbonates, Hydroxides & Sulphates', qTarget: '20 Class Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+
+      // 5. BOTANY
+      { id: 'bot-12-3', subjectId: 'botany', title: 'Molecular Basis of Inheritance', classLevel: '12', priorityRank: 1, weightageTag: '6–7 Qs/yr', repeatedTopics: 'Nucleosome Packaging, Meselson-Stahl, DNA Replication Enzymes, Transcription Unit, Genetic Code, Lac Operon & HGP', qTarget: '50 Practice Sheet Qs + All 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-12-2', subjectId: 'botany', title: 'Principles of Inheritance and Variation', classLevel: '12', priorityRank: 2, weightageTag: '5 Qs/yr', repeatedTopics: 'Incomplete/Codominance, Test Cross, Morgan Linkage & Recombination, Pedigree Analysis & Mendelian/Chromosomal Disorders', qTarget: '45 In-Class Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-12-1', subjectId: 'botany', title: 'Sexual Reproduction in Flowering Plants', classLevel: '12', priorityRank: 3, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Pollen Grain Layers, 7-Celled 8-Nucleate Embryo Sac, Wind/Water/Insect Pollination, Double Fertilization & Apomixis', qTarget: '40 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-12-5', subjectId: 'botany', title: 'Organisms and Populations', classLevel: '12', priorityRank: 4, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Population Interactions (+/+, +/-, +/0 Examples), Exponential vs Logistic Growth & Age Pyramids', qTarget: '35 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-12-7', subjectId: 'botany', title: 'Biodiversity and Conservation', classLevel: '12', priorityRank: 5, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Evil Quartet (Habitat Loss & Fragmentation #1), Alexander von Humboldt Species-Area Graph & In-situ vs Ex-situ', qTarget: '30 NCERT Discussions + Last 5 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-12-6', subjectId: 'botany', title: 'Ecosystem', classLevel: '12', priorityRank: 6, weightageTag: '2 Qs/yr', repeatedTopics: 'Productivity (GPP - R = NPP), Decomposition Steps (Fragmentation/Leaching/Catabolism) & Ecological Pyramids', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-12-4', subjectId: 'botany', title: 'Microbes in Human Welfare', classLevel: '12', priorityRank: 7, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Bioactive Molecules (Cyclosporin A, Statins, Streptokinase), Sewage BOD & Mycorrhiza/Cyanobacteria Biofertilizers', qTarget: '25 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-6', subjectId: 'botany', title: 'Cell: The Unit of Life', classLevel: '11', priorityRank: 8, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Endomembrane System (ER, Golgi, Lysosome), Mitochondria/Chloroplast, 70S vs 80S Ribosomes & Chromosome Types', qTarget: '40 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-7', subjectId: 'botany', title: 'Cell Cycle and Cell Division', classLevel: '11', priorityRank: 9, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Interphase (S-phase DNA 2C→4C), Prophase-I 5 Stages (Zygotene Synapsis, Pachytene Crossing Over, Diplotene Chiasmata)', qTarget: '40 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-4', subjectId: 'botany', title: 'Morphology of Flowering Plants', classLevel: '11', priorityRank: 10, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Aestivation & Placentation NCERT Examples, Actinomorphic/Zygomorphic Flowers & Plant Families', qTarget: '40 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-8', subjectId: 'botany', title: 'Photosynthesis in Higher Plants', classLevel: '11', priorityRank: 11, weightageTag: '3 Qs/yr', repeatedTopics: 'Cyclic vs Non-Cyclic Photophosphorylation, Chemiosmotic Hypothesis, Calvin Cycle & C4 Kranz Anatomy', qTarget: '35 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-10', subjectId: 'botany', title: 'Plant Growth and Development', classLevel: '11', priorityRank: 12, weightageTag: '3 Qs/yr', repeatedTopics: 'Plant Growth Regulators: Auxin (Apical Dominance), Gibberellin (Bolting/Malting), Cytokinin, Ethylene & ABA', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-3', subjectId: 'botany', title: 'Plant Kingdom', classLevel: '11', priorityRank: 13, weightageTag: '3 Qs/yr', repeatedTopics: 'Algae Table (Chloro-, Phaeo-, Rhodophyceae Pigments/Stored Food), Bryophytes, Heterospory in Pteridophytes & Gymnosperms', qTarget: '35 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-5', subjectId: 'botany', title: 'Anatomy of Flowering Plants', classLevel: '11', priorityRank: 14, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Radial vs Conjoint Vascular Bundles, Endarch vs Exarch Xylem & Dicot vs Monocot Root/Stem/Leaf', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-9', subjectId: 'botany', title: 'Respiration in Plants', classLevel: '11', priorityRank: 15, weightageTag: '2 Qs/yr', repeatedTopics: 'Glycolysis, Link Reaction, Krebs Cycle Substrate-Level Phosphorylation, ETS Complexes I–V & RQ Values', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-2', subjectId: 'botany', title: 'Biological Classification', classLevel: '11', priorityRank: 16, weightageTag: '2 Qs/yr', repeatedTopics: 'Whittaker 5-Kingdom Table, Diatoms/Dinoflagellates, Fungi Classes & Viruses/Viroids/Prions', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'bot-11-1', subjectId: 'botany', title: 'The Living World', classLevel: '11', priorityRank: 17, weightageTag: '1 Q/yr', repeatedTopics: 'ICBN/ICZN Binomial Nomenclature Rules & Taxonomic Hierarchy Categories', qTarget: '20 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+
+      // 6. ZOOLOGY
+      { id: 'zoo-12-5', subjectId: 'zoology', title: 'Biotechnology: Principles and Processes', classLevel: '12', priorityRank: 1, weightageTag: '5–6 Qs/yr', repeatedTopics: 'Restriction Endonucleases, Gel Electrophoresis (Ethidium Bromide), pBR322 Cloning Sites & PCR Steps', qTarget: '50 Tapasaya + Practice Sheet Qs + All 7 Yrs PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-12-1', subjectId: 'zoology', title: 'Human Reproduction', classLevel: '12', priorityRank: 2, weightageTag: '4 Qs/yr', repeatedTopics: 'Spermatogenesis vs Oogenesis Ploidy, Menstrual Cycle Pituitary/Ovarian Hormones, Fertilization & Placental Hormones', qTarget: '40 Tapasaya Series Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-12-6', subjectId: 'zoology', title: 'Biotechnology and its Applications', classLevel: '12', priorityRank: 3, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Bt Cotton (cryIAc/cryIIAb vs cryIAb), RNA Interference (M. incognita), C-Peptide Pro-Insulin & ADA Gene Therapy', qTarget: '35 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-12-4', subjectId: 'zoology', title: 'Human Health and Disease', classLevel: '12', priorityRank: 4, weightageTag: '3 Qs/yr', repeatedTopics: 'Typhoid/Pneumonia/Malaria (Plasmodium Cycle), Active vs Passive Immunity, Allergies (IgE), AIDS & Drugs', qTarget: '40 Tapasaya Series Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-12-3', subjectId: 'zoology', title: 'Evolution', classLevel: '12', priorityRank: 5, weightageTag: '2–3 Qs/yr', repeatedTopics: 'Homologous (Divergent) vs Analogous (Convergent) Organs, Natural Selection Types & Hardy-Weinberg (p²+2pq+q²=1)', qTarget: '35 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-12-2', subjectId: 'zoology', title: 'Reproductive Health', classLevel: '12', priorityRank: 6, weightageTag: '2 Qs/yr', repeatedTopics: 'Non-Medicated/Copper/Hormonal IUDs (CuT, LNG-20, Progestasert), Oral Contraceptives (Saheli) & ART (ZIFT, IUT, GIFT, ICSI)', qTarget: '30 Practice Sheet Qs + 2026–23 PYQ', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-1', subjectId: 'zoology', title: 'Animal Kingdom', classLevel: '11', priorityRank: 7, weightageTag: '4–5 Qs/yr', repeatedTopics: 'Symmetry & Coelom Basis, Canal vs Water Vascular System, Non-Chordate Phyla Examples & Chordata Classes', qTarget: '45 Tapasaya Series Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-3', subjectId: 'zoology', title: 'Biomolecules', classLevel: '11', priorityRank: 8, weightageTag: '4–5 Qs/yr', repeatedTopics: 'Primary vs Secondary Metabolites Table, Zwitterion, Protein Structures (1°–4°), Competitive Enzyme Inhibition & Cofactors', qTarget: '45 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-2', subjectId: 'zoology', title: 'Structural Organisation in Animals', classLevel: '11', priorityRank: 9, weightageTag: '3–4 Qs/yr', repeatedTopics: 'Ciliated/Glandular Epithelium, Tight/Adhering/Gap Junctions & Frog/Cockroach Digestive & Reproductive Systems', qTarget: '35 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-7', subjectId: 'zoology', title: 'Locomotion and Movement', classLevel: '11', priorityRank: 10, weightageTag: '2 Qs/yr', repeatedTopics: 'Sarcomere Bands during Contraction, Ribs & Synovial Joints Matching & Disorders (Myasthenia Gravis, Tetany, Gout)', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-9', subjectId: 'zoology', title: 'Chemical Coordination and Integration', classLevel: '11', priorityRank: 11, weightageTag: '2 Qs/yr', repeatedTopics: 'Hypothalamus/Pituitary/Thyroid/Adrenal/Pancreas Hormones, Diabetes Insipidus vs Mellitus & Hormone Mechanism', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-4', subjectId: 'zoology', title: 'Breathing and Exchange of Gases', classLevel: '11', priorityRank: 12, weightageTag: '2 Qs/yr', repeatedTopics: 'Respiratory Volumes & Capacities (TV, IRV, ERV, RV, VC), Oxyhaemoglobin Curve Shift Factors & CO2 Transport', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-5', subjectId: 'zoology', title: 'Body Fluids and Circulation', classLevel: '11', priorityRank: 13, weightageTag: '2 Qs/yr', repeatedTopics: 'ABO & Rh Erythroblastosis Foetalis, Cardiac Cycle (0.8s), ECG Waves (P, QRS, T) & Double Circulation', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-6', subjectId: 'zoology', title: 'Excretory Products and their Elimination', classLevel: '11', priorityRank: 14, weightageTag: '2 Qs/yr', repeatedTopics: 'GFR (125 mL/min), PCT/Henle Loop/DCT Reabsorption, Counter-Current Multiplier & ADH/RAAS vs ANF Regulation', qTarget: '30 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null },
+      { id: 'zoo-11-8', subjectId: 'zoology', title: 'Neural Control and Coordination', classLevel: '11', priorityRank: 15, weightageTag: '1–2 Qs/yr', repeatedTopics: 'Resting (-70mV) vs Action Potential Na+/K+ Pump, Electrical vs Chemical Synapse & Limbic System/Medulla Functions', qTarget: '25 Practice Sheet Qs + PYQs', done: {}, pyqYears: {}, revCount: 0, nextRevAt: null }
+    ];
+
+    let state = {
+      screen: 'subjects', // 'subjects' | 'roadmap' | 'revisions' | 'imp_topics' | 'notifications' | 'chapters' | 'tasks'
+      alertsSubTab: 'timer', // 'timer' | 'alerts'
+      revHubSubjectFilter: 'active', // 'active' | subjectId
+      examTimersOpen: false,
+      chapterRevDrawerOpen: false,
+      activeSubjectId: null,
+      activeChapterId: null,
+      spotlightChapterId: null,
+      impTopicsSubjectFilter: 'all',
+      impTopicsClassFilter: 'all',
+      pyqExpanded: false,
+      roadmapCollapsed: false,
+      darkMode: false,
+      soundMuted: false,
+      focusDurationSecs: 45 * 60,
+      focusRemainingSecs: 45 * 60,
+      focusRunning: false,
+      reminders: JSON.parse(JSON.stringify(DEFAULT_DAILY_REMINDERS)),
+      firedReminderKeys: {},
+      searchQuery: '',
+      classFilter: '12',
+      planDayNumber: 1,
+      lastCarriedCount: 0,
+      lastCompletedCount: 0,
+      dailyMissions: [],
+      subjectTasks: JSON.parse(JSON.stringify(INITIAL_SUBJECT_TASKS)),
+      chapters: JSON.parse(JSON.stringify(INITIAL_CHAPTERS))
+    };
+
+    let countdownTimerId = null;
+    let focusIntervalId = null;
+    let pushHideTimeoutId = null;
+    let audioCtx = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('neet_mission_2027_tracker_v6');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.chapters) && parsed.subjectTasks) {
+            state.darkMode = Boolean(parsed.darkMode);
+            state.soundMuted = Boolean(parsed.soundMuted);
+            state.subjectTasks = parsed.subjectTasks;
+            state.planDayNumber = parsed.planDayNumber || 1;
+            state.lastCarriedCount = parsed.lastCarriedCount || 0;
+            state.lastCompletedCount = parsed.lastCompletedCount || 0;
+            if (Array.isArray(parsed.reminders) && parsed.reminders.length > 0) {
+              state.reminders = parsed.reminders;
+            }
+            const savedMap = {};
+            parsed.chapters.forEach(c => { savedMap[c.id] = c; });
+            state.chapters = INITIAL_CHAPTERS.map(initCh => {
+              const saved = savedMap[initCh.id];
+              if (saved) {
+                return {
+                  ...initCh,
+                  done: saved.done || {},
+                  pyqYears: saved.pyqYears || {},
+                  revCount: saved.revCount || 0,
+                  nextRevAt: saved.nextRevAt || null
+                };
+              }
+              return initCh;
+            });
+            parsed.chapters.forEach(c => {
+              if (String(c.id).startsWith('ch_')) {
+                state.chapters.push(c);
+              }
+            });
+            if (Array.isArray(parsed.dailyMissions) && parsed.dailyMissions.length > 0) {
+              state.dailyMissions = parsed.dailyMissions;
+            }
+          }
+        }
+      } catch (e) {}
+      if (!state.dailyMissions || state.dailyMissions.length === 0) {
+        generateAdaptiveDailyPlan(false);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          darkMode: state.darkMode,
+          soundMuted: state.soundMuted,
+          reminders: state.reminders,
+          planDayNumber: state.planDayNumber,
+          lastCarriedCount: state.lastCarriedCount,
+          lastCompletedCount: state.lastCompletedCount,
+          dailyMissions: state.dailyMissions,
+          subjectTasks: state.subjectTasks,
+          chapters: state.chapters
+        }));
+      } catch (e) {}
+    }
+
+    function playNotificationChime() {
+      if (state.soundMuted) return;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        [659.25, 987.77].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+          gain.gain.setValueAtTime(0.001, now + idx * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.14 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 0.45);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.14);
+          osc.stop(now + idx * 0.14 + 0.48);
+        });
+      } catch (e) {}
+    }
+
+    function triggerAppNotification(title, bodyText) {
+      playNotificationChime();
+      const banner = document.getElementById('appPushNotification');
+      const titleEl = document.getElementById('pushNotifTitle');
+      const bodyEl = document.getElementById('pushNotifBody');
+      const timeEl = document.getElementById('pushNotifTime');
+
+      if (banner && titleEl && bodyEl) {
+        titleEl.textContent = title;
+        bodyEl.textContent = bodyText;
+        if (timeEl) {
+          const d = new Date();
+          timeEl.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        banner.classList.remove('hidden');
+        if (pushHideTimeoutId) clearTimeout(pushHideTimeoutId);
+        pushHideTimeoutId = setTimeout(() => {
+          banner.classList.add('hidden');
+        }, 7000);
+      }
+
+      try {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(title, { body: bodyText });
+        }
+      } catch (e) {}
+    }
+
+    function requestOsNotificationPermission() {
+      try {
+        if (!('Notification' in window)) {
+          triggerAppNotification('In-App Push Alerts Active', 'Alerts will pop up at the top of the screen with sound.');
+          return;
+        }
+        Notification.requestPermission().then(perm => {
+          renderNotificationsView();
+          if (perm === 'granted') {
+            triggerAppNotification('System Push Alerts Enabled!', 'You will now receive native notifications.');
+          } else {
+            triggerAppNotification('In-App Push Alerts Active', 'Pop-up banners and sound chimes are active.');
+          }
+        }).catch(() => {
+          triggerAppNotification('In-App Push Alerts Active', 'Pop-up banners and sound chimes are active.');
+        });
+      } catch (e) {
+        triggerAppNotification('In-App Push Alerts Active', 'Pop-up banners and sound chimes are active.');
+      }
+    }
+
+    function downloadIcsAlarmsFile() {
+      triggerAppNotification('In-App Alerts Active', 'Your daily reminders are saved inside the app.');
+    }
+
+    function applyTheme() {
+      const htmlEl = document.documentElement;
+      const icon = document.getElementById('themeIcon');
+      if (state.darkMode) {
+        htmlEl.classList.add('dark');
+        icon.textContent = '☀️';
+      } else {
+        htmlEl.classList.remove('dark');
+        icon.textContent = '🌙';
+      }
+    }
+
+    function formatSmartPercent(completedUnits, total) {
+      if (!total || completedUnits <= 0) return '0%';
+      if (completedUnits >= total) return '100%';
+      const raw = (completedUnits / total) * 100;
+      const fixed = Number(raw.toFixed(1));
+      return `${fixed}%`;
+    }
+
+    function formatCountdown(targetMs) {
+      const now = Date.now();
+      const diff = targetMs - now;
+      if (diff <= 0) return 'Exam Day!';
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${days}d : ${pad(hours)}h : ${pad(mins)}m : ${pad(secs)}s`;
+    }
+
+    function checkScheduledDailyReminders() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const currentHm = `${hh}:${mm}`;
+      const todayKey = now.toDateString();
+
+      state.reminders.forEach(rem => {
+        if (!rem.enabled) return;
+        const fireKey = `${todayKey}_${rem.id}_${currentHm}`;
+        if (rem.time === currentHm && !state.firedReminderKeys[fireKey]) {
+          state.firedReminderKeys[fireKey] = true;
+          triggerAppNotification(rem.title, rem.sub || 'Scheduled daily study reminder');
+        }
+      });
+    }
+
+    function updateExamTimers() {
+      const el1 = document.getElementById('timerJee1');
+      const el2 = document.getElementById('timerJee2');
+      const el3 = document.getElementById('timerNeet');
+      if (el1) el1.textContent = formatCountdown(EXAM_TARGETS.jee1);
+      if (el2) el2.textContent = formatCountdown(EXAM_TARGETS.jee2);
+      if (el3) el3.textContent = formatCountdown(EXAM_TARGETS.neet);
+      checkScheduledDailyReminders();
+    }
+
+    function startCountdownLoop() {
+      if (countdownTimerId) clearInterval(countdownTimerId);
+      updateExamTimers();
+      countdownTimerId = setInterval(updateExamTimers, 1000);
+    }
+
+    function formatMmSs(totalSecs) {
+      const m = Math.floor(totalSecs / 60);
+      const s = totalSecs % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateFocusTimerUi() {
+      const disp = document.getElementById('focusTimerDisplay');
+      const btn = document.getElementById('btnStartPauseFocusTimer');
+      if (disp) disp.textContent = formatMmSs(state.focusRemainingSecs);
+      if (btn) btn.textContent = state.focusRunning ? 'Pause Timer' : 'Start Timer';
+    }
+
+    function toggleFocusTimer() {
+      if (state.focusRunning) {
+        state.focusRunning = false;
+        if (focusIntervalId) clearInterval(focusIntervalId);
+        updateFocusTimerUi();
+        return;
+      }
+      state.focusRunning = true;
+      updateFocusTimerUi();
+      if (focusIntervalId) clearInterval(focusIntervalId);
+      focusIntervalId = setInterval(() => {
+        if (state.focusRemainingSecs > 0) {
+          state.focusRemainingSecs--;
+          updateFocusTimerUi();
+        } else {
+          state.focusRunning = false;
+          clearInterval(focusIntervalId);
+          state.focusRemainingSecs = state.focusDurationSecs;
+          updateFocusTimerUi();
+          triggerAppNotification('Study Focus Session Complete! 🎉', 'Great work! Tick your completed tasks.');
+        }
+      }, 1000);
+    }
+
+    function resetFocusTimer() {
+      state.focusRunning = false;
+      if (focusIntervalId) clearInterval(focusIntervalId);
+      state.focusRemainingSecs = state.focusDurationSecs;
+      updateFocusTimerUi();
+    }
+
+    function getTasksForSubject(subjectId) {
+      return state.subjectTasks[subjectId] || INITIAL_SUBJECT_TASKS.physics;
+    }
+
+    function getPyqCompletedCount(chapter) {
+      if (!chapter.pyqYears) return 0;
+      let count = 0;
+      PYQ_YEARS.forEach(y => {
+        if (chapter.pyqYears[y.id]) count++;
+      });
+      return count;
+    }
+
+    function isPyqFullyDone(chapter) {
+      return getPyqCompletedCount(chapter) === PYQ_YEARS.length;
+    }
+
+    function getChapterStats(chapter) {
+      const tasks = getTasksForSubject(chapter.subjectId);
+      const total = tasks.length;
+      if (total === 0) return { completed: 0, completedUnits: 0, total: 0, percent: 0, displayPercent: '0%' };
+
+      let completedUnits = 0;
+      let exactCompleted = 0;
+
+      tasks.forEach(t => {
+        if (t.isPyq) {
+          const pyqDone = getPyqCompletedCount(chapter);
+          if (pyqDone === PYQ_YEARS.length || (chapter.done && chapter.done[t.id])) {
+            completedUnits += 1;
+            exactCompleted += 1;
+          } else if (pyqDone > 0) {
+            completedUnits += pyqDone / PYQ_YEARS.length;
+          }
+        } else {
+          if (chapter.done && chapter.done[t.id]) {
+            completedUnits += 1;
+            exactCompleted += 1;
+          }
+        }
+      });
+
+      const rawPercent = (completedUnits / total) * 100;
+      return {
+        completed: exactCompleted,
+        completedUnits,
+        total,
+        percent: Math.min(100, rawPercent),
+        displayPercent: formatSmartPercent(completedUnits, total)
+      };
+    }
+
+    function getFilteredStats(classLevelFilter, subjectIdFilter = null) {
+      const effectiveClass = (classLevelFilter === '11' || classLevelFilter === '12') ? classLevelFilter : 'all';
+      const chs = state.chapters.filter(c => {
+        if (subjectIdFilter && c.subjectId !== subjectIdFilter) return false;
+        if (effectiveClass !== 'all' && c.classLevel !== effectiveClass) return false;
+        return true;
+      });
+
+      let total = 0;
+      let completedUnits = 0;
+      let exactCompleted = 0;
+
+      chs.forEach(ch => {
+        const st = getChapterStats(ch);
+        total += st.total;
+        completedUnits += st.completedUnits;
+        exactCompleted += st.completed;
+      });
+
+      const rawPercent = total > 0 ? (completedUnits / total) * 100 : 0;
+      return {
+        completed: exactCompleted,
+        completedUnits,
+        total,
+        chapterCount: chs.length,
+        percent: Math.min(100, rawPercent),
+        displayPercent: formatSmartPercent(completedUnits, total)
+      };
+    }
+
+    function formatRevisionDueLabel(nextRevAt) {
+      if (!nextRevAt) return { label: 'Not started', urgent: false };
+      const now = Date.now();
+      const diffMs = nextRevAt - now;
+      const diffDays = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+      if (diffDays <= 0) {
+        return { label: 'Due Today!', urgent: true };
+      }
+      if (diffDays === 1) {
+        return { label: '1 day from now', urgent: false };
+      }
+      return { label: `${diffDays} days from now`, urgent: false };
+    }
+
+    function triggerChapterRevision(chapterId) {
+      const ch = state.chapters.find(c => c.id === chapterId);
+      if (!ch) return;
+      ch.revCount = (ch.revCount || 0) + 1;
+      ch.nextRevAt = Date.now() + THREE_DAYS_MS;
+      saveState();
+      renderAll();
+      triggerAppNotification(
+        `3-Day Revision Set: ${ch.title}`,
+        `Next revision is 3 days from now (Cycle #${ch.revCount}).`
+      );
+    }
+
+    function openImpTopicsForChapter(chapterId) {
+      const ch = state.chapters.find(c => c.id === chapterId);
+      if (ch) {
+        state.spotlightChapterId = ch.id;
+        state.impTopicsSubjectFilter = ch.subjectId;
+      } else {
+        state.spotlightChapterId = null;
+      }
+      state.screen = 'imp_topics';
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function getNextActionForChapter(chapter) {
+      const tasks = getTasksForSubject(chapter.subjectId);
+      const nextPyqYear = PYQ_YEARS.find(y => !(chapter.pyqYears && chapter.pyqYears[y.id]));
+      const nextTask = tasks.find(t => !t.isPyq && !(chapter.done && chapter.done[t.id]));
+
+      if (nextTask && nextPyqYear) {
+        return {
+          taskId: nextTask.id,
+          pyqYearId: nextPyqYear.id,
+          actionTitle: `${nextTask.label} + ${nextPyqYear.label}`,
+          detail: chapter.qTarget || `Complete ${nextTask.label} & ${nextPyqYear.label}`
+        };
+      }
+      if (nextPyqYear) {
+        return {
+          taskId: 'pyq',
+          pyqYearId: nextPyqYear.id,
+          actionTitle: `Solve ${nextPyqYear.label}`,
+          detail: `Complete ${nextPyqYear.label}`
+        };
+      }
+      if (nextTask) {
+        return {
+          taskId: nextTask.id,
+          pyqYearId: null,
+          actionTitle: `Complete ${nextTask.label}`,
+          detail: chapter.qTarget || `Finish ${nextTask.label}`
+        };
+      }
+      return null;
+    }
+
+    function pickBestChapterForSlot(subjectIds, requireOcFromBasics = false, excludeChapterIds = []) {
+      let candidates = [];
+      if (requireOcFromBasics) {
+        candidates = state.chapters
+          .filter(c => c.subjectId === 'organic_chem' && !excludeChapterIds.includes(c.id))
+          .sort((a, b) => (a.ocOrder || 99) - (b.ocOrder || 99));
+      } else {
+        candidates = state.chapters
+          .filter(c => subjectIds.includes(c.subjectId) && !excludeChapterIds.includes(c.id))
+          .sort((a, b) => {
+            if (a.classLevel !== b.classLevel) return a.classLevel === '12' ? -1 : 1;
+            return (a.priorityRank || 99) - (b.priorityRank || 99);
+          });
+      }
+
+      for (const ch of candidates) {
+        const st = getChapterStats(ch);
+        if (st.completed < st.total) {
+          return ch;
+        }
+      }
+      return candidates[0] || null;
+    }
+
+    function generateAdaptiveDailyPlan(isNextDayTransition = false) {
+      let carriedMissions = [];
+      let completedTodayCount = 0;
+
+      if (isNextDayTransition && Array.isArray(state.dailyMissions)) {
+        state.dailyMissions.forEach(m => {
+          if (m.completed) {
+            completedTodayCount++;
+          } else {
+            carriedMissions.push({
+              ...m,
+              carriedOver: true,
+              carryCount: (m.carryCount || 0) + 1
+            });
+          }
+        });
+        state.planDayNumber = (state.planDayNumber || 1) + 1;
+        state.lastCarriedCount = carriedMissions.length;
+        state.lastCompletedCount = completedTodayCount;
+      }
+
+      const newMissions = [...carriedMissions];
+      const usedChapterIds = newMissions.map(m => m.chapterId);
+
+      const slotBlueprints = [
+        {
+          slotLabel: 'Slot 1 • Pre-4 PM',
+          subjectPool: (state.planDayNumber % 2 === 1) ? ['physics'] : ['physical_chem', 'inorganic_chem'],
+          ocFromBasics: false
+        },
+        {
+          slotLabel: 'Slot 2 • Pre-4 PM',
+          subjectPool: ['organic_chem'],
+          ocFromBasics: true
+        },
+        {
+          slotLabel: 'Slot 3 • After 9 PM',
+          subjectPool: (state.planDayNumber % 2 === 1) ? ['botany'] : ['zoology'],
+          ocFromBasics: false
+        }
+      ];
+
+      slotBlueprints.forEach(bp => {
+        if (newMissions.length >= 3) return;
+        const ch = pickBestChapterForSlot(bp.subjectPool, bp.ocFromBasics, usedChapterIds);
+        if (!ch) return;
+        const nextAct = getNextActionForChapter(ch);
+        if (!nextAct) return;
+        const sub = SUBJECTS.find(s => s.id === ch.subjectId);
+        usedChapterIds.push(ch.id);
+
+        newMissions.push({
+          id: 'mission_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          slotLabel: bp.slotLabel,
+          subjectId: ch.subjectId,
+          subjectName: sub ? sub.name : 'Subject',
+          chapterId: ch.id,
+          chapterTitle: ch.title,
+          classLevel: ch.classLevel,
+          taskId: nextAct.taskId,
+          pyqYearId: nextAct.pyqYearId,
+          actionTitle: nextAct.actionTitle,
+          qTarget: ch.qTarget || nextAct.detail,
+          weightageTag: ch.weightageTag || 'High-Yield',
+          repeatedTopics: ch.repeatedTopics || 'NCERT Core Concepts & PYQs',
+          isOcFoundation: ch.subjectId === 'organic_chem' && ch.classLevel === '11',
+          carriedOver: false,
+          carryCount: 0,
+          completed: false
+        });
+      });
+
+      state.dailyMissions = newMissions;
+      saveState();
+    }
+
+    function completeDailyMission(missionId) {
+      const m = state.dailyMissions.find(x => x.id === missionId);
+      if (!m) return;
+      m.completed = !m.completed;
+
+      const ch = state.chapters.find(c => c.id === m.chapterId);
+      if (ch) {
+        if (!ch.done) ch.done = {};
+        if (!ch.pyqYears) ch.pyqYears = {};
+        if (m.taskId && m.taskId !== 'pyq') {
+          ch.done[m.taskId] = m.completed;
+        }
+        if (m.pyqYearId) {
+          ch.pyqYears[m.pyqYearId] = m.completed;
+          ch.done['pyq'] = isPyqFullyDone(ch);
+        }
+        if (m.completed && !ch.nextRevAt) {
+          ch.revCount = 1;
+          ch.nextRevAt = Date.now() + THREE_DAYS_MS;
+        }
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function renderTopNav() {
+      const btnSub = document.getElementById('navBtnSubjects');
+      const btnRoad = document.getElementById('navBtnRoadmap');
+      const btnRev = document.getElementById('navBtnRevisions');
+      const btnImp = document.getElementById('navBtnImpTopics');
+      const btnNotif = document.getElementById('navBtnNotifications');
+
+      const activeStyle = 'flex-1 py-2 px-2.5 rounded-xl text-xs font-semibold bg-[#5c8d73] text-white shadow-2xs transition-all text-center';
+      const inactiveStyle = 'flex-1 py-2 px-2.5 rounded-xl text-xs font-medium bg-white dark:bg-[#1C211F] text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 hover:border-slate-300 transition-all text-center';
+
+      const isSubGroup = (state.screen === 'subjects' || state.screen === 'chapters' || state.screen === 'tasks');
+      btnSub.className = isSubGroup ? activeStyle : inactiveStyle;
+      btnRoad.className = state.screen === 'roadmap' ? activeStyle : inactiveStyle;
+      if (btnRev) btnRev.className = state.screen === 'revisions' ? activeStyle : inactiveStyle;
+      btnImp.className = state.screen === 'imp_topics' ? activeStyle : inactiveStyle;
+      if (btnNotif) btnNotif.className = state.screen === 'notifications' ? activeStyle : inactiveStyle;
+    }
+
+    function renderNotificationsView() {
+      updateFocusTimerUi();
+
+      // Switch between Focus Timer sub-panel and Daily Alerts sub-panel via buttons
+      const pTimer = document.getElementById('panelFocusTimerOnly');
+      const pAlerts = document.getElementById('panelAlertsOnly');
+      const bTimer = document.getElementById('subBtnShowTimer');
+      const bAlerts = document.getElementById('subBtnShowAlerts');
+
+      const subActive = 'py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#28302D] text-[#3B664C] dark:text-[#8AB89E] shadow-2xs transition-all';
+      const subInactive = 'py-2 rounded-xl text-xs font-medium text-slate-500 dark:text-slate-400 transition-all';
+
+      if (state.alertsSubTab === 'alerts') {
+        pTimer.classList.add('hidden');
+        pAlerts.classList.remove('hidden');
+        bTimer.className = subInactive;
+        bAlerts.className = subActive;
+      } else {
+        pTimer.classList.remove('hidden');
+        pAlerts.classList.add('hidden');
+        bTimer.className = subActive;
+        bAlerts.className = subInactive;
+      }
+
+      const muteBtn = document.getElementById('btnToggleSoundMute');
+      if (muteBtn) {
+        muteBtn.textContent = state.soundMuted ? '🔇 Muted' : '🔊 Sound: On';
+      }
+
+      const listEl = document.getElementById('dailyRemindersList');
+      if (!listEl) return;
+
+      listEl.innerHTML = state.reminders.map(rem => {
+        return `
+          <div class="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200/70 dark:border-slate-800">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <input
+                type="time"
+                data-rem-time="${rem.id}"
+                value="${rem.time}"
+                class="px-2 py-1 text-xs font-mono font-semibold rounded-lg bg-white dark:bg-[#1C211F] border border-slate-200 dark:border-slate-700 text-[#3E6B4E] dark:text-[#8CBE9E]"
+              />
+              <span class="text-xs font-medium ${rem.enabled ? 'text-slate-800 dark:text-slate-100' : 'line-through text-slate-400'} truncate">
+                ${rem.title}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                data-rem-toggle="${rem.id}"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-semibold ${
+                  rem.enabled ? 'bg-[#5c8d73] text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                }"
+              >
+                ${rem.enabled ? 'On' : 'Off'}
+              </button>
+              <button
+                type="button"
+                data-rem-delete="${rem.id}"
+                class="text-xs text-slate-400 hover:text-rose-500 px-1"
+              >✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRoadmapSection() {
+      const dayBadge = document.getElementById('planDayBadge');
+      if (dayBadge) dayBadge.textContent = `Day ${state.planDayNumber || 1}`;
+
+      const bannerEl = document.getElementById('adaptiveAnalysisBanner');
+      if (bannerEl) {
+        if (state.lastCarriedCount > 0) {
+          bannerEl.textContent = `Carried forward ${state.lastCarriedCount} unfinished task(s) from yesterday as Priority #1.`;
+        } else {
+          bannerEl.textContent = `3 focused tasks around your 4:00–9:00 PM classes (12th Priority + OC From Basics).`;
+        }
+      }
+
+      const listEl = document.getElementById('dailyMissionsList');
+      if (listEl) {
+        listEl.innerHTML = (state.dailyMissions || []).map(m => {
+          return `
+            <div class="rounded-xl border px-3.5 py-3 flex items-center justify-between gap-3 ${
+              m.completed
+                ? 'border-[#5c8d73]/40 bg-[#F4F8F5] dark:bg-[#18231D]'
+                : 'border-slate-200/80 dark:border-slate-800 bg-[#F9FAF8] dark:bg-[#161A18]'
+            }">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mb-0.5">
+                  <span>${m.slotLabel}</span>
+                  <span>•</span>
+                  <span class="font-semibold text-[#3E6B4E] dark:text-[#8CBE9E]">${m.subjectName}</span>
+                  ${m.carriedOver ? `<span class="text-[#7C5E38] dark:text-[#CFAF85] font-semibold">• Carried Over</span>` : ''}
+                </div>
+                <p class="text-xs sm:text-sm font-semibold truncate ${m.completed ? 'line-through text-slate-400' : 'text-slate-800 dark:text-slate-100'}">
+                  ${m.chapterTitle}
+                </p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  ${m.actionTitle} • ${m.qTarget}
+                </p>
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  data-direct-imp="${m.chapterId}"
+                  class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]"
+                >
+                  Imp Topics
+                </button>
+                <button
+                  type="button"
+                  data-mission-toggle="${m.id}"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold ${
+                    m.completed
+                      ? 'bg-[#5c8d73] text-white'
+                      : 'bg-white dark:bg-[#1C211F] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200'
+                  }"
+                >
+                  ${m.completed ? '✓ Done' : 'Done'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function renderRevisionsHubView() {
+      const revChapters = state.chapters
+        .filter(c => c.nextRevAt !== null)
+        .sort((a, b) => (a.nextRevAt || 0) - (b.nextRevAt || 0));
+
+      const countBadge = document.getElementById('globalRevisionCountBadge');
+      if (countBadge) countBadge.textContent = `${revChapters.length} active`;
+
+      // Subject Filter Buttons for Revisions Hub
+      const pillsEl = document.getElementById('revHubSubjectButtons');
+      if (pillsEl) {
+        const tabs = [
+          { id: 'active', name: `Active Loop (${revChapters.length})` },
+          ...SUBJECTS.map(s => ({ id: s.id, name: s.name }))
+        ];
+        pillsEl.innerHTML = tabs.map(t => {
+          const isAct = state.revHubSubjectFilter === t.id;
+          return `
+            <button
+              type="button"
+              data-rev-hub-sub="${t.id}"
+              class="px-2.5 py-1 rounded-xl text-[11px] font-medium transition-all ${
+                isAct
+                  ? 'bg-[#5c8d73] text-white'
+                  : 'bg-[#F6F7F5] dark:bg-[#151917] text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-800'
+              }"
+            >
+              ${t.name}
+            </button>
+          `;
+        }).join('');
+      }
+
+      let displayList = [];
+      if (state.revHubSubjectFilter === 'active') {
+        displayList = revChapters.length > 0
+          ? revChapters
+          : state.chapters.filter(c => c.priorityRank <= 2).slice(0, 6);
+      } else {
+        displayList = state.chapters.filter(c => c.subjectId === state.revHubSubjectFilter);
+        if (state.revHubSubjectFilter === 'organic_chem') {
+          displayList.sort((a, b) => (a.ocOrder || 99) - (b.ocOrder || 99));
+        }
+      }
+
+      const stripEl = document.getElementById('globalRevisionStrip');
+      if (stripEl) {
+        stripEl.innerHTML = displayList.map(ch => {
+          const sub = SUBJECTS.find(s => s.id === ch.subjectId);
+          const due = ch.nextRevAt
+            ? formatRevisionDueLabel(ch.nextRevAt)
+            : { label: 'Not started yet', urgent: false };
+
+          return `
+            <div class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200/70 dark:border-slate-800">
+              <div class="min-w-0 flex-1">
+                <p class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
+                  ${ch.title}
+                </p>
+                <p class="text-[11px] text-[#3E6B4E] dark:text-[#8CBE9E] mt-0.5">
+                  ${sub ? sub.name : ''} • ⟳ ${due.label}
+                </p>
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  data-direct-imp="${ch.id}"
+                  class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]"
+                >
+                  Imp Topics
+                </button>
+                <button
+                  type="button"
+                  data-quick-rev="${ch.id}"
+                  class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold bg-[#5c8d73] text-white"
+                >
+                  ${ch.nextRevAt ? '✓ +3d' : 'Start 3d'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function renderImpTopicsView() {
+      const spotlightEl = document.getElementById('impTopicSpotlightCard');
+      const spotCh = state.spotlightChapterId ? state.chapters.find(c => c.id === state.spotlightChapterId) : null;
+
+      if (spotCh && spotlightEl) {
+        const sub = SUBJECTS.find(s => s.id === spotCh.subjectId);
+        const due = spotCh.nextRevAt ? formatRevisionDueLabel(spotCh.nextRevAt) : { label: 'Not started' };
+        const topicsArray = (spotCh.repeatedTopics || '').split(/,|&/).map(s => s.trim()).filter(Boolean);
+
+        spotlightEl.classList.remove('hidden');
+        spotlightEl.innerHTML = `
+          <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <span class="text-[10px] font-semibold text-[#3E6B4E] dark:text-[#8CBE9E]">${sub ? sub.name : ''} • Class ${spotCh.classLevel}th (${spotCh.weightageTag})</span>
+              <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">${spotCh.title}</h3>
+            </div>
+            <button type="button" id="btnClearSpotlight" class="text-xs text-slate-400">✕</button>
+          </div>
+
+          <div class="mt-2.5 space-y-1.5">
+            ${topicsArray.map(t => `
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F6F7F5] dark:bg-[#151917] text-xs">
+                <span class="text-[#5c8d73] font-bold">•</span>
+                <span>${t}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+            <span class="text-[11px] text-slate-500">Target: ${spotCh.qTarget} • ⟳ ${due.label}</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" data-imp-rev="${spotCh.id}" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#5c8d73] text-white">✓ Revise (+3d)</button>
+              <button type="button" data-imp-open-tasks="${spotCh.id}" class="px-2.5 py-1 rounded-lg text-xs border border-slate-200 dark:border-slate-700">Checklist ›</button>
+            </div>
+          </div>
+        `;
+      } else if (spotlightEl) {
+        spotlightEl.classList.add('hidden');
+      }
+
+      const pillsEl = document.getElementById('impTopicsSubjectPills');
+      if (pillsEl) {
+        const allPills = [{ id: 'all', name: 'All' }, ...SUBJECTS];
+        pillsEl.innerHTML = allPills.map(p => {
+          const active = state.impTopicsSubjectFilter === p.id;
+          return `
+            <button
+              type="button"
+              data-imp-sub="${p.id}"
+              class="px-2.5 py-1 rounded-xl text-[11px] font-medium ${
+                active
+                  ? 'bg-[#5c8d73] text-white'
+                  : 'bg-[#F6F7F5] dark:bg-[#151917] text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-800'
+              }"
+            >
+              ${p.name}
+            </button>
+          `;
+        }).join('');
+      }
+
+      const listEl = document.getElementById('impTopicsListContainer');
+      if (!listEl) return;
+
+      let chs = state.chapters.filter(c => {
+        if (state.impTopicsSubjectFilter !== 'all' && c.subjectId !== state.impTopicsSubjectFilter) return false;
+        if (state.impTopicsClassFilter !== 'all' && c.classLevel !== state.impTopicsClassFilter) return false;
+        return true;
+      });
+
+      chs.sort((a, b) => {
+        if (a.subjectId === 'organic_chem' && b.subjectId === 'organic_chem') {
+          return (a.ocOrder || 99) - (b.ocOrder || 99);
+        }
+        return (a.priorityRank || 99) - (b.priorityRank || 99);
+      });
+
+      listEl.innerHTML = chs.map(ch => {
+        return `
+          <div class="p-3 rounded-xl bg-[#F6F7F5] dark:bg-[#151917] border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-2">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold text-slate-800 dark:text-slate-100 truncate">${ch.title}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-white dark:bg-[#1C211F] text-[#3E6B4E] dark:text-[#8CBE9E]">${ch.weightageTag}</span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">${ch.repeatedTopics}</p>
+            </div>
+            <button
+              type="button"
+              data-imp-spotlight="${ch.id}"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white dark:bg-[#1C211F] border border-slate-200 dark:border-slate-700 shrink-0"
+            >
+              View ›
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateHeaderAndOverall() {
+      const combinedNeet = getFilteredStats('all', null);
+      const stats12All = getFilteredStats('12', null);
+      const stats11All = getFilteredStats('11', null);
+
+      document.getElementById('neetMeterPercent').textContent = combinedNeet.displayPercent;
+      document.getElementById('neetMeterBar').style.width = `${combinedNeet.percent}%`;
+      document.getElementById('neetMeterSubtext').textContent =
+        `${combinedNeet.completed} of ${combinedNeet.total} total tasks completed (12th: ${stats12All.displayPercent} • 11th: ${stats11All.displayPercent})`;
+
+      const activeClass = state.classFilter === '11' ? '11' : state.classFilter === 'all' ? 'all' : '12';
+      const currentClassStats = getFilteredStats(activeClass, state.activeSubjectId);
+      const classPrefix = activeClass === '12' ? '12th: ' : activeClass === '11' ? '11th: ' : 'All: ';
+      document.getElementById('overallBadge').textContent = `${classPrefix}${currentClassStats.displayPercent} Done`;
+
+      const btnBack = document.getElementById('btnBack');
+      const headerTitle = document.getElementById('headerTitle');
+      const headerBreadcrumb = document.getElementById('headerBreadcrumb');
+      const timersGrid = document.getElementById('examTimersGrid');
+
+      if (timersGrid) {
+        if (state.examTimersOpen) {
+          timersGrid.classList.remove('hidden');
+          timersGrid.classList.add('grid');
+        } else {
+          timersGrid.classList.add('hidden');
+          timersGrid.classList.remove('grid');
+        }
+      }
+
+      if (state.screen === 'subjects') {
+        btnBack.classList.add('hidden');
+        btnBack.classList.remove('inline-flex');
+        headerTitle.textContent = 'Study Tracker';
+        headerBreadcrumb.textContent = '6 Subjects';
+      } else if (state.screen === 'roadmap') {
+        btnBack.classList.remove('hidden');
+        btnBack.classList.add('inline-flex');
+        headerTitle.textContent = 'Daily Plan';
+        headerBreadcrumb.textContent = '3 Daily Tasks';
+      } else if (state.screen === 'revisions') {
+        btnBack.classList.remove('hidden');
+        btnBack.classList.add('inline-flex');
+        headerTitle.textContent = '3-Day Revisions';
+        headerBreadcrumb.textContent = 'Repeating Spaced Revision';
+      } else if (state.screen === 'imp_topics') {
+        btnBack.classList.remove('hidden');
+        btnBack.classList.add('inline-flex');
+        headerTitle.textContent = 'Most Imp Topics';
+        headerBreadcrumb.textContent = '10-Yr High-Yield Topics';
+      } else if (state.screen === 'notifications') {
+        btnBack.classList.remove('hidden');
+        btnBack.classList.add('inline-flex');
+        headerTitle.textContent = 'Timer & Alerts';
+        headerBreadcrumb.textContent = 'Focus Timer & Reminders';
+      } else if (state.screen === 'chapters') {
+        const sub = SUBJECTS.find(s => s.id === state.activeSubjectId);
+        btnBack.classList.remove('hidden');
+        btnBack.classList.add('inline-flex');
+        headerTitle.textContent = sub ? sub.name : 'Chapters';
+        headerBreadcrumb.textContent = `Class ${activeClass === 'all' ? '12 & 11' : activeClass + 'th'}`;
+      } else if (state.screen === 'tasks') {
+        const sub = SUBJECTS.find(s => s.id === state.activeSubjectId);
+        const ch = state.chapters.find(c => c.id === state.activeChapterId);
+        btnBack.classList.remove('hidden');
+        btnBack.classList.add('inline-flex');
+        headerTitle.textContent = ch ? ch.title : 'Chapter';
+        headerBreadcrumb.textContent = (sub ? sub.name : '') + ` • Class ${ch ? ch.classLevel : ''}th`;
+      }
+    }
+
+    function renderClassTabs() {
+      const t12 = document.getElementById('tabClass12');
+      const t11 = document.getElementById('tabClass11');
+      const tAll = document.getElementById('tabClassAll');
+      const tRev = document.getElementById('tabSubjectRevision');
+      const h12 = document.getElementById('homeTabClass12');
+      const h11 = document.getElementById('homeTabClass11');
+      const homeLabel = document.getElementById('homeClassLabel');
+      const sel = document.getElementById('classFilterSelect');
+      if (sel && (state.classFilter === '12' || state.classFilter === '11' || state.classFilter === 'all')) {
+        sel.value = state.classFilter;
+      }
+
+      const activeClass = 'px-3 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#28302D] text-[#3B664C] dark:text-[#8AB89E] shadow-2xs transition-all';
+      const inactiveClass = 'px-3 py-1 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 transition-all';
+
+      t12.className = state.classFilter === '12' ? activeClass : inactiveClass;
+      t11.className = state.classFilter === '11' ? activeClass : inactiveClass;
+      tAll.className = state.classFilter === 'all' ? activeClass : inactiveClass;
+      if (tRev) tRev.className = state.classFilter === 'revision' ? activeClass : inactiveClass;
+
+      const homeActive = 'px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white dark:bg-[#28302D] text-[#3B664C] dark:text-[#8AB89E] shadow-2xs transition-all';
+      const homeInactive = 'px-2.5 py-1 rounded-lg text-[11px] font-medium text-slate-500 dark:text-slate-400 transition-all';
+
+      if (h12 && h11) {
+        h12.className = state.classFilter === '11' ? homeInactive : homeActive;
+        h11.className = state.classFilter === '11' ? homeActive : homeInactive;
+      }
+      if (homeLabel) {
+        homeLabel.textContent = state.classFilter === '11' ? 'Class 11th' : 'Class 12th (default)';
+      }
+
+      const ocNotice = document.getElementById('ocBasicsNotice');
+      if (ocNotice) {
+        if (state.activeSubjectId === 'organic_chem') {
+          ocNotice.classList.remove('hidden');
+        } else {
+          ocNotice.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderSubjectsView() {
+      renderClassTabs();
+      const activeClass = state.classFilter === '11' ? '11' : '12';
+      const container = document.getElementById('subjectsVerticalList');
+
+      container.innerHTML = SUBJECTS.map(sub => {
+        const stats = getFilteredStats(activeClass, sub.id);
+        return `
+          <button
+            type="button"
+            data-subject-id="${sub.id}"
+            class="w-full text-left bg-white dark:bg-[#1C211F] hover:bg-[#FCFDFC] dark:hover:bg-[#232A27] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl px-4 py-3.5 transition-all flex items-center justify-between gap-3 shadow-2xs"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-7 h-7 rounded-lg text-xs font-semibold flex items-center justify-center shrink-0 ${sub.pillBg}">
+                ${sub.num}
+              </span>
+              <span class="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
+                ${sub.name}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2.5 shrink-0">
+              <div class="hidden sm:block w-20 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full ${sub.barColor} transition-all duration-300" style="width: ${stats.percent}%"></div>
+              </div>
+              <span class="text-xs font-medium text-slate-400 w-10 text-right">
+                ${stats.displayPercent}
+              </span>
+              <span class="text-slate-300 dark:text-slate-600">›</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderChaptersView() {
+      renderClassTabs();
+      const listEl = document.getElementById('chaptersVerticalList');
+
+      if (state.classFilter === 'revision') {
+        let subChs = state.chapters.filter(c => c.subjectId === state.activeSubjectId);
+        if (state.activeSubjectId === 'organic_chem') {
+          subChs.sort((a, b) => (a.ocOrder || 99) - (b.ocOrder || 99));
+        }
+
+        listEl.innerHTML = subChs.map((ch, idx) => {
+          const due = formatRevisionDueLabel(ch.nextRevAt);
+          return `
+            <div class="bg-white dark:bg-[#1C211F] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl px-4 py-3 flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <p class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-100 truncate">${idx + 1}. ${ch.title}</p>
+                <p class="text-[11px] text-[#3E6B4E] dark:text-[#8CBE9E] mt-0.5">⟳ ${due.label}</p>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" data-rev-imp-btn="${ch.id}" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#E6EEF4] text-[#3B627E] dark:bg-[#1C2A35] dark:text-[#8BB4D2]">Imp Topics</button>
+                <button type="button" data-rev-chapter-btn="${ch.id}" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#5c8d73] text-white">${ch.nextRevAt ? '✓ +3d' : 'Start 3d'}</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return;
+      }
+
+      let filtered = state.chapters.filter(ch => {
+        if (ch.subjectId !== state.activeSubjectId) return false;
+        if (state.classFilter !== 'all' && ch.classLevel !== state.classFilter) return false;
+        if (state.searchQuery.trim() !== '') {
+          return ch.title.toLowerCase().includes(state.searchQuery.toLowerCase());
+        }
+        return true;
+      });
+
+      if (state.activeSubjectId === 'organic_chem' && state.classFilter === 'all') {
+        filtered.sort((a, b) => (a.ocOrder || 99) - (b.ocOrder || 99));
+      }
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div class="bg-white dark:bg-[#1C211F] rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 text-center">
+            <p class="text-xs text-slate-400">No chapters found.</p>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map((ch, index) => {
+        const st = getChapterStats(ch);
+        const isAllDone = st.completed === st.total && st.total > 0;
+
+        return `
+          <button
+            type="button"
+            data-chapter-id="${ch.id}"
+            class="w-full text-left bg-white dark:bg-[#1C211F] hover:bg-[#FCFDFC] dark:hover:bg-[#232A27] border border-slate-200/80 dark:border-slate-800/90 rounded-2xl px-4 py-3.5 transition-all flex items-center justify-between gap-3 shadow-2xs"
+          >
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="text-xs text-slate-400 w-5 shrink-0">${index + 1}.</span>
+              <span class="text-sm font-medium truncate ${isAllDone ? 'line-through text-slate-400' : 'text-slate-800 dark:text-slate-100'}">
+                ${ch.title}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2.5 shrink-0">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">
+                ${st.completed}/${st.total}
+              </span>
+              <span class="text-slate-300 dark:text-slate-600">›</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderTasksView() {
+      const ch = state.chapters.find(c => c.id === state.activeChapterId);
+      if (!ch) return;
+
+      const tasks = getTasksForSubject(ch.subjectId);
+      const st = getChapterStats(ch);
+
+      document.getElementById('chapterTaskStats').textContent = `${st.completed}/${st.total} (${st.displayPercent})`;
+      document.getElementById('chapterProgressBar').style.width = `${st.percent}%`;
+
+      const revDrawer = document.getElementById('chapterRevDrawer');
+      if (revDrawer) {
+        if (state.chapterRevDrawerOpen) {
+          revDrawer.classList.remove('hidden');
+        } else {
+          revDrawer.classList.add('hidden');
+        }
+      }
+
+      const revCycleBadge = document.getElementById('chapterRevCycleBadge');
+      const revStatusText = document.getElementById('chapterRevStatusText');
+      if (revCycleBadge) revCycleBadge.textContent = `Cycle #${ch.revCount || 0}`;
+      if (revStatusText) {
+        const due = ch.nextRevAt ? formatRevisionDueLabel(ch.nextRevAt) : { label: 'Click button to set 3 days from now' };
+        revStatusText.textContent = `Next Revision: ${due.label}`;
+      }
+
+      const allCompleted = st.completed === st.total && st.total > 0;
+      document.getElementById('btnToggleAllTasks').textContent = allCompleted ? 'Unmark all' : 'Mark all complete';
+
+      const listEl = document.getElementById('tasksVerticalList');
+
+      listEl.innerHTML = tasks.map(task => {
+        if (task.isPyq) {
+          const pyqDoneCount = getPyqCompletedCount(ch);
+          const pyqAllDone = pyqDoneCount === PYQ_YEARS.length;
+
+          const yearsHtml = PYQ_YEARS.map(yr => {
+            const yrChecked = Boolean(ch.pyqYears && ch.pyqYears[yr.id]);
+            return `
+              <div
+                data-pyq-year="${yr.id}"
+                role="button"
+                tabindex="0"
+                class="cursor-pointer select-none rounded-xl px-3.5 py-2.5 border transition-all flex items-center justify-between ${
+                  yrChecked
+                    ? 'border-[#5c8d73]/40 bg-[#EDF4F0] dark:bg-[#19261F]'
+                    : 'border-slate-200/70 dark:border-slate-800 bg-[#F9FAF8] dark:bg-[#161A18]'
+                }"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-4 h-4 rounded border flex items-center justify-center text-[10px] ${
+                    yrChecked ? 'bg-[#5c8d73] border-[#5c8d73] text-white' : 'border-slate-300 dark:border-slate-600'
+                  }">
+                    ${yrChecked ? '✓' : ''}
+                  </span>
+                  <span class="text-xs font-medium ${yrChecked ? 'line-through text-slate-400' : ''}">
+                    ${yr.label}
+                  </span>
+                </div>
+                <span class="text-[10px] text-slate-400">${yrChecked ? 'Complete' : 'Incomplete'}</span>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="rounded-2xl border ${
+              pyqAllDone ? 'border-[#5c8d73]/40 bg-[#F4F8F5] dark:bg-[#1A241E]' : 'border-slate-200/80 dark:border-slate-800/90 bg-white dark:bg-[#1C211F]'
+            } overflow-hidden">
+              <div
+                data-action="toggle-pyq-panel"
+                role="button"
+                tabindex="0"
+                class="w-full cursor-pointer select-none px-4 py-3.5 flex items-center justify-between gap-3"
+              >
+                <div class="flex items-center gap-3">
+                  <span
+                    data-action="quick-toggle-all-pyq"
+                    class="w-5 h-5 rounded-md border flex items-center justify-center text-xs ${
+                      pyqAllDone ? 'bg-[#5c8d73] border-[#5c8d73] text-white' : 'border-slate-300 dark:border-slate-600'
+                    }"
+                  >
+                    ${pyqAllDone ? '✓' : pyqDoneCount > 0 ? '•' : ''}
+                  </span>
+                  <span class="text-xs sm:text-sm font-medium ${pyqAllDone ? 'line-through text-slate-400' : ''}">
+                    ${task.label} (2026 – 2020)
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
+                    ${pyqDoneCount}/7
+                  </span>
+                  <span class="text-xs text-slate-400 ${state.pyqExpanded ? 'rotate-90' : ''}">›</span>
+                </div>
+              </div>
+
+              <div class="${state.pyqExpanded ? 'block' : 'hidden'} px-4 pb-3.5 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] text-slate-400">Last 7 Years PYQs</span>
+                  <button type="button" data-action="quick-toggle-all-pyq" class="text-[11px] font-medium text-[#47725b] dark:text-[#8AB89E]">
+                    ${pyqAllDone ? 'Unmark all 7 years' : 'Mark all 7 years'}
+                  </button>
+                </div>
+                ${yearsHtml}
+              </div>
+            </div>
+          `;
+        }
+
+        const checked = Boolean(ch.done && ch.done[task.id]);
+        return `
+          <div
+            data-task-id="${task.id}"
+            role="button"
+            tabindex="0"
+            class="w-full cursor-pointer select-none bg-white dark:bg-[#1C211F] border ${
+              checked ? 'border-[#5c8d73]/40 bg-[#F4F8F5] dark:bg-[#1A241E]' : 'border-slate-200/80 dark:border-slate-800/90'
+            } rounded-2xl px-4 py-3.5 transition-all flex items-center justify-between gap-3"
+          >
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-md border flex items-center justify-center text-xs ${
+                checked ? 'bg-[#5c8d73] border-[#5c8d73] text-white' : 'border-slate-300 dark:border-slate-600'
+              }">
+                ${checked ? '✓' : ''}
+              </span>
+              <span class="text-xs sm:text-sm font-medium ${checked ? 'line-through text-slate-400' : ''}">
+                ${task.label}
+              </span>
+            </div>
+
+            <span class="text-[11px] ${checked ? 'text-[#47725b] dark:text-[#8AB89E]' : 'text-slate-400'}">
+              ${checked ? 'Complete' : 'Incomplete'}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderAll() {
+      applyTheme();
+      renderTopNav();
+      updateHeaderAndOverall();
+
+      const vSub = document.getElementById('viewSubjects');
+      const vRoad = document.getElementById('viewDailyRoadmap');
+      const vRev = document.getElementById('viewRevisionsHub');
+      const vImp = document.getElementById('viewImpTopics');
+      const vNotif = document.getElementById('viewNotifications');
+      const vChap = document.getElementById('viewChapters');
+      const vTask = document.getElementById('viewTasks');
+
+      vSub.classList.add('hidden');
+      vRoad.classList.add('hidden');
+      if (vRev) vRev.classList.add('hidden');
+      vImp.classList.add('hidden');
+      if (vNotif) vNotif.classList.add('hidden');
+      vChap.classList.add('hidden');
+      vTask.classList.add('hidden');
+
+      if (state.screen === 'subjects') {
+        vSub.classList.remove('hidden');
+        renderSubjectsView();
+      } else if (state.screen === 'roadmap') {
+        vRoad.classList.remove('hidden');
+        renderRoadmapSection();
+      } else if (state.screen === 'revisions') {
+        if (vRev) vRev.classList.remove('hidden');
+        renderRevisionsHubView();
+      } else if (state.screen === 'imp_topics') {
+        vImp.classList.remove('hidden');
+        renderImpTopicsView();
+      } else if (state.screen === 'notifications') {
+        if (vNotif) vNotif.classList.remove('hidden');
+        renderNotificationsView();
+      } else if (state.screen === 'chapters') {
+        vChap.classList.remove('hidden');
+        renderChaptersView();
+      } else if (state.screen === 'tasks') {
+        vTask.classList.remove('hidden');
+        renderTasksView();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      startCountdownLoop();
+      renderAll();
+
+      // Toggle Exam Countdown Timers via Button
+      document.getElementById('btnToggleExamTimers').addEventListener('click', () => {
+        state.examTimersOpen = !state.examTimersOpen;
+        updateHeaderAndOverall();
+      });
+
+      // App Push Notification Banner Actions
+      document.getElementById('btnPushDismiss').addEventListener('click', () => {
+        document.getElementById('appPushNotification').classList.add('hidden');
+      });
+      document.getElementById('btnPushOpenAction').addEventListener('click', () => {
+        document.getElementById('appPushNotification').classList.add('hidden');
+        state.screen = 'roadmap';
+        renderAll();
+      });
+
+      // Top Primary Navigation Pill Buttons
+      document.getElementById('navBtnSubjects').addEventListener('click', () => {
+        state.screen = 'subjects';
+        state.activeSubjectId = null;
+        state.activeChapterId = null;
+        if (state.classFilter === 'all' || state.classFilter === 'revision') state.classFilter = '12';
+        renderAll();
+      });
+
+      document.getElementById('navBtnRoadmap').addEventListener('click', () => {
+        state.screen = 'roadmap';
+        renderAll();
+      });
+
+      document.getElementById('navBtnRevisions').addEventListener('click', () => {
+        state.screen = 'revisions';
+        renderAll();
+      });
+
+      document.getElementById('navBtnImpTopics').addEventListener('click', () => {
+        state.screen = 'imp_topics';
+        renderAll();
+      });
+
+      document.getElementById('navBtnNotifications').addEventListener('click', () => {
+        state.screen = 'notifications';
+        renderAll();
+      });
+
+      // Sub-Buttons inside Timer & Alerts View
+      document.getElementById('subBtnShowTimer').addEventListener('click', () => {
+        state.alertsSubTab = 'timer';
+        renderNotificationsView();
+      });
+      document.getElementById('subBtnShowAlerts').addEventListener('click', () => {
+        state.alertsSubTab = 'alerts';
+        renderNotificationsView();
+      });
+
+      // Notifications & Focus Timer Page Controls
+      document.getElementById('btnTestPushNotif').addEventListener('click', () => {
+        const m = state.dailyMissions && state.dailyMissions[0];
+        triggerAppNotification(
+          m ? `Study Alert: ${m.chapterTitle}` : 'Daily Study Slot Reminder',
+          m ? `Target: ${m.qTarget}` : 'Time for your scheduled high-yield NEET study session!'
+        );
+      });
+
+      document.getElementById('btnToggleSoundMute').addEventListener('click', () => {
+        state.soundMuted = !state.soundMuted;
+        saveState();
+        renderNotificationsView();
+      });
+
+      document.getElementById('btnEnableOsNotif').addEventListener('click', () => {
+        requestOsNotificationPermission();
+      });
+
+      document.getElementById('btnStartPauseFocusTimer').addEventListener('click', () => {
+        toggleFocusTimer();
+      });
+
+      document.getElementById('btnResetFocusTimer').addEventListener('click', () => {
+        resetFocusTimer();
+      });
+
+      document.getElementById('btnDownloadIcsAlarms').addEventListener('click', () => {
+        downloadIcsAlarmsFile();
+      });
+
+      document.getElementById('viewNotifications').addEventListener('click', (e) => {
+        const presetBtn = e.target.closest('button[data-timer-mins]');
+        if (presetBtn) {
+          const mins = parseInt(presetBtn.getAttribute('data-timer-mins'), 10) || 25;
+          state.focusRunning = false;
+          if (focusIntervalId) clearInterval(focusIntervalId);
+          state.focusDurationSecs = mins * 60;
+          state.focusRemainingSecs = mins * 60;
+          updateFocusTimerUi();
+          return;
+        }
+
+        const toggleRemBtn = e.target.closest('button[data-rem-toggle]');
+        if (toggleRemBtn) {
+          const remId = toggleRemBtn.getAttribute('data-rem-toggle');
+          const r = state.reminders.find(x => x.id === remId);
+          if (r) {
+            r.enabled = !r.enabled;
+            saveState();
+            renderNotificationsView();
+          }
+          return;
+        }
+
+        const delRemBtn = e.target.closest('button[data-rem-delete]');
+        if (delRemBtn) {
+          const remId = delRemBtn.getAttribute('data-rem-delete');
+          state.reminders = state.reminders.filter(x => x.id !== remId);
+          saveState();
+          renderNotificationsView();
+        }
+      });
+
+      document.getElementById('viewNotifications').addEventListener('change', (e) => {
+        const timeInput = e.target.closest('input[data-rem-time]');
+        if (timeInput) {
+          const remId = timeInput.getAttribute('data-rem-time');
+          const r = state.reminders.find(x => x.id === remId);
+          if (r && timeInput.value) {
+            r.time = timeInput.value;
+            saveState();
+            renderNotificationsView();
+          }
+        }
+      });
+
+      document.getElementById('formAddReminder').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const timeVal = document.getElementById('inputReminderTime').value;
+        const titleVal = document.getElementById('inputReminderTitle').value.trim();
+        if (!timeVal || !titleVal) return;
+        state.reminders.push({
+          id: 'rem_' + Date.now(),
+          time: timeVal,
+          title: titleVal,
+          sub: 'Custom daily study alert',
+          enabled: true
+        });
+        document.getElementById('inputReminderTitle').value = '';
+        saveState();
+        renderNotificationsView();
+        triggerAppNotification('New Daily Alert Added', `Scheduled for ${timeVal}: ${titleVal}`);
+      });
+
+      // Back Navigation
+      document.getElementById('btnBack').addEventListener('click', () => {
+        if (state.screen === 'tasks') {
+          state.screen = 'chapters';
+          state.activeChapterId = null;
+          state.pyqExpanded = false;
+          state.chapterRevDrawerOpen = false;
+        } else if (state.screen === 'chapters') {
+          state.screen = 'subjects';
+          state.activeSubjectId = null;
+          if (state.classFilter === 'all' || state.classFilter === 'revision') state.classFilter = '12';
+          state.searchQuery = '';
+          document.getElementById('chapterSearchInput').value = '';
+        } else {
+          state.screen = 'subjects';
+        }
+        renderAll();
+      });
+
+      // Theme Toggle
+      document.getElementById('btnThemeToggle').addEventListener('click', () => {
+        state.darkMode = !state.darkMode;
+        saveState();
+        applyTheme();
+      });
+
+      document.getElementById('btnToggleRoadmap').addEventListener('click', () => {
+        state.roadmapCollapsed = !state.roadmapCollapsed;
+        renderRoadmapSection();
+      });
+
+      document.getElementById('btnNextDayPlan').addEventListener('click', () => {
+        generateAdaptiveDailyPlan(true);
+        renderAll();
+      });
+
+      document.getElementById('btnOpenAllImpTopicsFromRev').addEventListener('click', () => {
+        state.spotlightChapterId = null;
+        state.impTopicsSubjectFilter = 'all';
+        state.screen = 'imp_topics';
+        renderAll();
+      });
+
+      // Clicks inside Daily Plan Page
+      document.getElementById('viewDailyRoadmap').addEventListener('click', (e) => {
+        const directImpBtn = e.target.closest('button[data-direct-imp]');
+        if (directImpBtn) {
+          openImpTopicsForChapter(directImpBtn.getAttribute('data-direct-imp'));
+          return;
+        }
+        const toggleBtn = e.target.closest('button[data-mission-toggle]');
+        if (toggleBtn) {
+          completeDailyMission(toggleBtn.getAttribute('data-mission-toggle'));
+        }
+      });
+
+      // Clicks inside Dedicated Revisions Hub Page
+      document.getElementById('viewRevisionsHub').addEventListener('click', (e) => {
+        const subBtn = e.target.closest('button[data-rev-hub-sub]');
+        if (subBtn) {
+          state.revHubSubjectFilter = subBtn.getAttribute('data-rev-hub-sub');
+          renderRevisionsHubView();
+          return;
+        }
+        const directImpBtn = e.target.closest('button[data-direct-imp]');
+        if (directImpBtn) {
+          openImpTopicsForChapter(directImpBtn.getAttribute('data-direct-imp'));
+          return;
+        }
+        const quickRevBtn = e.target.closest('button[data-quick-rev]');
+        if (quickRevBtn) {
+          triggerChapterRevision(quickRevBtn.getAttribute('data-quick-rev'));
+        }
+      });
+
+      // Clicks inside Most Important Topics Page
+      document.getElementById('viewImpTopics').addEventListener('click', (e) => {
+        if (e.target.closest('#btnClearSpotlight')) {
+          state.spotlightChapterId = null;
+          renderImpTopicsView();
+          return;
+        }
+        const spotBtn = e.target.closest('button[data-imp-spotlight]');
+        if (spotBtn) {
+          state.spotlightChapterId = spotBtn.getAttribute('data-imp-spotlight');
+          renderImpTopicsView();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        const subPill = e.target.closest('button[data-imp-sub]');
+        if (subPill) {
+          state.impTopicsSubjectFilter = subPill.getAttribute('data-imp-sub');
+          renderImpTopicsView();
+          return;
+        }
+        const revBtn = e.target.closest('button[data-imp-rev]');
+        if (revBtn) {
+          triggerChapterRevision(revBtn.getAttribute('data-imp-rev'));
+          return;
+        }
+        const openTasksBtn = e.target.closest('button[data-imp-open-tasks]');
+        if (openTasksBtn) {
+          const chId = openTasksBtn.getAttribute('data-imp-open-tasks');
+          const ch = state.chapters.find(c => c.id === chId);
+          if (!ch) return;
+          state.activeSubjectId = ch.subjectId;
+          state.activeChapterId = ch.id;
+          state.classFilter = ch.classLevel;
+          state.screen = 'tasks';
+          renderAll();
+        }
+      });
+
+      document.getElementById('impTopicsClassSelect').addEventListener('change', (e) => {
+        state.impTopicsClassFilter = e.target.value;
+        renderImpTopicsView();
+      });
+
+      // Home Screen Class Switcher
+      document.getElementById('homeTabClass12').addEventListener('click', () => {
+        state.classFilter = '12';
+        renderAll();
+      });
+      document.getElementById('homeTabClass11').addEventListener('click', () => {
+        state.classFilter = '11';
+        renderAll();
+      });
+
+      // Click Subject -> Open Chapters
+      document.getElementById('subjectsVerticalList').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-subject-id]');
+        if (!btn) return;
+        state.activeSubjectId = btn.getAttribute('data-subject-id');
+        state.classFilter = '12';
+        state.searchQuery = '';
+        document.getElementById('chapterSearchInput').value = '';
+        state.screen = 'chapters';
+        renderAll();
+      });
+
+      // Class & Revision Switcher Buttons inside Subject
+      document.getElementById('tabClass12').addEventListener('click', () => {
+        state.classFilter = '12';
+        renderAll();
+      });
+      document.getElementById('tabClass11').addEventListener('click', () => {
+        state.classFilter = '11';
+        renderAll();
+      });
+      document.getElementById('tabClassAll').addEventListener('click', () => {
+        state.classFilter = 'all';
+        renderAll();
+      });
+      document.getElementById('tabSubjectRevision').addEventListener('click', () => {
+        state.classFilter = 'revision';
+        renderAll();
+      });
+
+      document.getElementById('classFilterSelect').addEventListener('change', (e) => {
+        state.classFilter = e.target.value;
+        renderAll();
+      });
+
+      // Click Chapter or Revision inside Chapters View
+      document.getElementById('chaptersVerticalList').addEventListener('click', (e) => {
+        const revImpBtn = e.target.closest('button[data-rev-imp-btn]');
+        if (revImpBtn) {
+          e.stopPropagation();
+          openImpTopicsForChapter(revImpBtn.getAttribute('data-rev-imp-btn'));
+          return;
+        }
+
+        const revBtn = e.target.closest('button[data-rev-chapter-btn]');
+        if (revBtn) {
+          e.stopPropagation();
+          triggerChapterRevision(revBtn.getAttribute('data-rev-chapter-btn'));
+          return;
+        }
+
+        const btn = e.target.closest('button[data-chapter-id]');
+        if (!btn) return;
+        const chId = btn.getAttribute('data-chapter-id');
+        const ch = state.chapters.find(c => c.id === chId);
+        state.activeChapterId = chId;
+        if (ch && (ch.classLevel === '12' || ch.classLevel === '11')) {
+          state.classFilter = ch.classLevel;
+        }
+        state.pyqExpanded = false;
+        state.chapterRevDrawerOpen = false;
+        state.screen = 'tasks';
+        renderAll();
+      });
+
+      // Toggle 3-Day Revision Drawer inside Chapter Checklist View
+      document.getElementById('btnToggleChapterRevDrawer').addEventListener('click', () => {
+        state.chapterRevDrawerOpen = !state.chapterRevDrawerOpen;
+        renderTasksView();
+      });
+
+      // Open Most Imp Topics from Chapter Tasks View
+      document.getElementById('btnOpenChapterImpTopics').addEventListener('click', () => {
+        if (!state.activeChapterId) return;
+        openImpTopicsForChapter(state.activeChapterId);
+      });
+
+      // Complete 3-Day Revision Button inside Chapter Checklist View
+      document.getElementById('btnCompleteChapterRevision').addEventListener('click', () => {
+        if (!state.activeChapterId) return;
+        triggerChapterRevision(state.activeChapterId);
+      });
+
+      // Click inside Tasks List
+      document.getElementById('tasksVerticalList').addEventListener('click', (e) => {
+        const ch = state.chapters.find(c => c.id === state.activeChapterId);
+        if (!ch) return;
+        if (!ch.done) ch.done = {};
+        if (!ch.pyqYears) ch.pyqYears = {};
+
+        const quickAllPyq = e.target.closest('[data-action="quick-toggle-all-pyq"]');
+        if (quickAllPyq) {
+          e.stopPropagation();
+          const allDone = isPyqFullyDone(ch);
+          PYQ_YEARS.forEach(y => {
+            ch.pyqYears[y.id] = !allDone;
+          });
+          ch.done['pyq'] = !allDone;
+          state.pyqExpanded = true;
+          saveState();
+          renderAll();
+          return;
+        }
+
+        const pyqYearRow = e.target.closest('[data-pyq-year]');
+        if (pyqYearRow) {
+          e.stopPropagation();
+          const yrId = pyqYearRow.getAttribute('data-pyq-year');
+          ch.pyqYears[yrId] = !ch.pyqYears[yrId];
+          ch.done['pyq'] = isPyqFullyDone(ch);
+          saveState();
+          renderAll();
+          return;
+        }
+
+        const pyqPanelToggle = e.target.closest('[data-action="toggle-pyq-panel"]');
+        if (pyqPanelToggle) {
+          state.pyqExpanded = !state.pyqExpanded;
+          renderTasksView();
+          return;
+        }
+
+        const row = e.target.closest('[data-task-id]');
+        if (!row) return;
+        const taskId = row.getAttribute('data-task-id');
+        ch.done[taskId] = !ch.done[taskId];
+        saveState();
+        renderAll();
+      });
+
+      // Mark All Complete / Unmark All in Chapter
+      document.getElementById('btnToggleAllTasks').addEventListener('click', () => {
+        const ch = state.chapters.find(c => c.id === state.activeChapterId);
+        if (!ch) return;
+        if (!ch.done) ch.done = {};
+        if (!ch.pyqYears) ch.pyqYears = {};
+
+        const tasks = getTasksForSubject(ch.subjectId);
+        const st = getChapterStats(ch);
+        const allDone = st.completed === st.total && st.total > 0;
+
+        tasks.forEach(t => {
+          ch.done[t.id] = !allDone;
+          if (t.isPyq) {
+            PYQ_YEARS.forEach(y => {
+              ch.pyqYears[y.id] = !allDone;
+            });
+          }
+        });
+        saveState();
+        renderAll();
+      });
+
+      document.getElementById('chapterSearchInput').addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        renderChaptersView();
+      });
+
+      document.getElementById('formAddTaskItem').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('inputNewTaskName');
+        const label = input.value.trim().toUpperCase();
+        if (!label || !state.activeSubjectId) return;
+        if (!state.subjectTasks[state.activeSubjectId]) {
+          state.subjectTasks[state.activeSubjectId] = [];
+        }
+        state.subjectTasks[state.activeSubjectId].push({
+          id: 'task_' + Date.now(),
+          label
+        });
+        input.value = '';
+        saveState();
+        renderAll();
+      });
+
+      const modal = document.getElementById('modalAddChapter');
+      const closeModal = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+      document.getElementById('btnOpenAddChapter').addEventListener('click', () => {
+        document.getElementById('inputChapterClass').value = state.classFilter === '11' ? '11' : '12';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.getElementById('inputChapterName').focus();
+      });
+      document.getElementById('btnCloseAddChapter').addEventListener('click', closeModal);
+      document.getElementById('btnCancelAddChapter').addEventListener('click', closeModal);
+
+      document.getElementById('formAddChapter').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('inputChapterName').value.trim();
+        const classLevel = document.getElementById('inputChapterClass').value;
+        if (!title || !state.activeSubjectId) return;
+        state.chapters.push({
+          id: 'ch_' + Date.now(),
+          subjectId: state.activeSubjectId,
+          title,
+          classLevel,
+          priorityRank: 50,
+          weightageTag: 'Custom',
+          repeatedTopics: 'NCERT Core & PYQs',
+          qTarget: '30 Class Qs + PYQs',
+          done: {},
+          pyqYears: {},
+          revCount: 0,
+          nextRevAt: null
+        });
+        state.classFilter = classLevel;
+        document.getElementById('inputChapterName').value = '';
+        closeModal();
+        saveState();
+        renderAll();
+      });
+    });
+  </script>
+</body>
+</html>
+```
